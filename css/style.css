@@ -20,3 +20,12 @@ body {}
     display: inline-block;
     position: absolute;
   }
+
+  .bullet {
+    width: 10px;
+    height: 20px;
+    background-color: black;
+    position: absolute;
+    left: 20px;
+    top: 0px;
+  }

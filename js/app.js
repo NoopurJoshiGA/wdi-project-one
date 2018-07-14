@@ -24,6 +24,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const invaderDrop = 40;
   let touchedRightSide = false;
 
+  let bullet;
+  let bulletPosition = 0;
+  const bulletSpeed = 10;
+
   setupBoard();
   createPlayer();
   createInvaders();
@@ -119,8 +123,21 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   function shootBullet() {
+    //first create the bullet
     console.log('spacebar pressed');
-    //code to shoot bullets when spacebar is pressed
+    bullet = document.createElement('div');
+    bullet.classList.add('bullet');
+    player.appendChild(bullet);
+
+    //move bullets up
+    const fireBullet = setInterval(function() {
+      if(bulletPosition > -550) {
+        bulletPosition -= bulletSpeed;
+        bullet.style.top = bulletPosition + 'px';
+      } else if(bulletPosition === 550) {
+        player.removeChild(bullet);
+      }
+    }, 100);
   }
 
 });
