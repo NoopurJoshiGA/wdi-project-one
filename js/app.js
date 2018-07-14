@@ -12,7 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const rightBoard = 700;
 
   const player = document.createElement('div');
-  let playerX = 335;
+  let playerX = 325;
   const playerY = 600;
   const playerSpeed = 10;
 
@@ -25,8 +25,17 @@ window.addEventListener('DOMContentLoaded', () => {
   let touchedRightSide = false;
 
   let bullet;
-  let bulletPosition = 0;
+  let bullets = [];
   const bulletSpeed = 10;
+  let bulletPosition = 0;
+
+  let bulletTop;
+  let bulletLeft;
+  let bulletRight;
+
+  let invaderLeft;
+  let invaderRight;
+  let invaderBottom;
 
   setupBoard();
   createPlayer();
@@ -46,34 +55,32 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function createInvaders() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 1; i++) {
       invader = document.createElement('div');
-      // invader[i].style.left = i*5 + 'px';
       invader.classList.add('invader');
       invaders.push(invader);
       gameBoard.appendChild(invader);
       invaders[i].style.left = (invaderX * i) + 'px';
     }
-    //moveInvaderRight();
+    moveInvaderRight();
   }
   //needs work
-  // function moveInvaderRight() {
-  //   if(touchedRightSide === false) {
-  //     const moveRight = setInterval(function() {
-  //       //for (let i = 0; i < invaders.length; i++) {
-  //       if(invaders[i].invaderX < 600) {
-  //         invaders[i].invaderX += invaderSpeed;
-  //         invaders[i].invader.style.left = invaderX + 'px';
-  //       } else {
-  //         clearInterval(moveRight);
-  //         console.log('touched the right side');
-  //         touchedRightSide = true;
-  //         dropInvader(touchedRightSide);
-  //         //}
-  //       }
-  //     }, 500);
-  //   }
-  // }
+  function moveInvaderRight() {
+    if(touchedRightSide === false) {
+      const moveRight = setInterval(function() {
+        //for (let i = 0; i < invaders.length; i++) {
+        if(invaderX < 600) {
+          invaderX += invaderSpeed;
+          invader.style.left = invaderX + 'px';
+        } else {
+          clearInterval(moveRight);
+          console.log('touched the right side');
+          touchedRightSide = true;
+          dropInvader(touchedRightSide);
+        }
+      }, 100);
+    }
+  }
 
   function dropInvader(touchedRightSide) {
     if(touchedRightSide === true) {
@@ -81,12 +88,12 @@ window.addEventListener('DOMContentLoaded', () => {
       invaderY += invaderDrop;
       invader.style.top = invaderY + 'px';
       console.log('dropped');
-      //moveInvaderLeft();
+      moveInvaderLeft();
     } else if(touchedRightSide === false) {
       invaderY += invaderDrop;
       invader.style.top = invaderY + 'px';
       console.log('dropped');
-      //moveInvaderRight();
+      moveInvaderRight();
     }
   }
 
@@ -102,7 +109,7 @@ window.addEventListener('DOMContentLoaded', () => {
           touchedRightSide = false;
           dropInvader(touchedRightSide);
         }
-      }, 500);
+      }, 100);
     }
   }
 
@@ -124,20 +131,41 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function shootBullet() {
     //first create the bullet
-    console.log('spacebar pressed');
     bullet = document.createElement('div');
+    //add it to the array of bullets
+    bullets.push(bullet);
     bullet.classList.add('bullet');
     player.appendChild(bullet);
+    bullets.forEach(function(bullet){
+      console.log(bullet);
+      const fireBullet = setInterval(function() {
+        if(bulletPosition > -600) {
+          bulletPosition -= bulletSpeed;
+          bullet.style.top = bulletPosition + 'px';
+          checkCollision();
+        }
+      }, 100);
+    });
+  }
 
-    //move bullets up
-    const fireBullet = setInterval(function() {
-      if(bulletPosition > -550) {
-        bulletPosition -= bulletSpeed;
-        bullet.style.top = bulletPosition + 'px';
-      } else if(bulletPosition === 550) {
-        player.removeChild(bullet);
-      }
-    }, 100);
+
+  function checkCollision() {
+    bulletLeft = bullet.getBoundingClientRect().left;
+    invaderLeft + 50;
+
+    bulletTop = bullet.getBoundingClientRect().top;
+    invaderBottom = invader.getBoundingClientRect().top;
+    bulletLeft = bullet.getBoundingClientRect().left;
+    invaderLeft = invader.getBoundingClientRect().left;
+    // console.log('bulletTop ' + bulletTop);
+    // console.log('invaderBottom ' + invaderBottom);
+    console.log('invaderleft ' + invaderLeft);
+    console.log('bulletleft ' + bulletLeft);
+    
+    if((bulletTop < (invaderBottom + 30)) && (bulletLeft <= (invaderLeft + 40))) {
+      alert('collision');
+    }
+
   }
 
 });

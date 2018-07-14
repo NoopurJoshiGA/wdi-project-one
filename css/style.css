@@ -1,9 +1,14 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 body {}
 
   .game-board {
     border: 2px solid black;
     height: 700px;
     width: 700px;
+    box-sizing: border-box;
   }
 
   .player {
