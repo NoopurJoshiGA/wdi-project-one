@@ -2,59 +2,125 @@
 window.addEventListener('DOMContentLoaded', () => {
 
   /////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////// DELIVERABLE 1 ///////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////
-
-  /////////////////////////////////////////////////////////////////////////////
   /////////////////////////////// GAME SETUP //////////////////////////////////
   /////////////////////////////////////////////////////////////////////////////
 
-  //set up the game
-  //to set up the game, create a board, specify the width and height of the board and add it to the dom
-  //create an array of aliens and appendchild to the board
-  //create player and append to the board, add to the middle of the screen (x axis width/2)?, height will be a little top from the bottle
-  //add event listeners to move the player to the player
-  function startGame() {
-    console.log('starting game...');
-    createBoard();
-    createPlayer();
-  }
+  //decalre all variables
+  const boardContainer = document.querySelector('.board-container');
+  const gameBoard = document.createElement('div');
+  const leftBoard = 0;
+  const rightBoard = 700;
 
-  function createBoard() {
-    const boardContainer = document.querySelector('.board-container');
-    const gameBoard = document.createElement('div');
+  const player = document.createElement('div');
+  let playerX = 335;
+  const playerY = 600;
+  const playerSpeed = 10;
+
+  const invaders = [];
+  let invader = document.createElement('div');
+  let invaderX = 100;
+  let invaderY = 0;
+  const invaderSpeed = 10;
+  const invaderDrop = 40;
+  let touchedRightSide = false;
+
+  setupBoard();
+  createPlayer();
+  createInvaders();
+
+  function setupBoard() {
+    gameBoard.classList.add('game-board');
     boardContainer.appendChild(gameBoard);
-    gameBoard.style.border = '2px solid black';
-    // gameBoard.style.backgroundColor = 'black';
-    gameBoard.style.width = '700px';
-    gameBoard.style.height = '700px';
+    console.log('board setup');
   }
 
   function createPlayer() {
-    const player = document.createElement('div');
+    player.classList.add('player');
     gameBoard.appendChild(player);
-    player.style.width = '50px';
-    player.style.height = '50px';
+    player.style.left = playerX + 'px';
+    player.style.top = playerY + 'px';
   }
 
-  //createAliens()
-  //add event listeners()
+  function createInvaders() {
+    for (let i = 0; i < 5; i++) {
+      invader = document.createElement('div');
+      // invader[i].style.left = i*5 + 'px';
+      invader.classList.add('invader');
+      invaders.push(invader);
+      gameBoard.appendChild(invader);
+      invaders[i].style.left = (invaderX * i) + 'px';
+    }
+    //moveInvaderRight();
+  }
+  //needs work
+  // function moveInvaderRight() {
+  //   if(touchedRightSide === false) {
+  //     const moveRight = setInterval(function() {
+  //       //for (let i = 0; i < invaders.length; i++) {
+  //       if(invaders[i].invaderX < 600) {
+  //         invaders[i].invaderX += invaderSpeed;
+  //         invaders[i].invader.style.left = invaderX + 'px';
+  //       } else {
+  //         clearInterval(moveRight);
+  //         console.log('touched the right side');
+  //         touchedRightSide = true;
+  //         dropInvader(touchedRightSide);
+  //         //}
+  //       }
+  //     }, 500);
+  //   }
+  // }
 
-  //move the aliens
-  //moveAlien()
-  //using timeouts? every second, move the array to the right and then down if it reaches the edge of the screen
+  function dropInvader(touchedRightSide) {
+    if(touchedRightSide === true) {
+      console.log(touchedRightSide);
+      invaderY += invaderDrop;
+      invader.style.top = invaderY + 'px';
+      console.log('dropped');
+      //moveInvaderLeft();
+    } else if(touchedRightSide === false) {
+      invaderY += invaderDrop;
+      invader.style.top = invaderY + 'px';
+      console.log('dropped');
+      //moveInvaderRight();
+    }
+  }
 
-  //somehow figure out how to shoot bullets
-  //shootBullet()
-  //add event listener for the spacebar
-  //create a square for now as the bullet
-  //attach the bullet to the player
+  function moveInvaderLeft() {
+    if(touchedRightSide === true) {
+      const moveLeft = setInterval(function() {
+        if(invaderX > 0) {
+          invaderX -= invaderSpeed;
+          invader.style.left = invaderX + 'px';
+        } else {
+          clearInterval(moveLeft);
+          console.log('touched the left side');
+          touchedRightSide = false;
+          dropInvader(touchedRightSide);
+        }
+      }, 500);
+    }
+  }
 
-  //somehow create collision detection
-  //use square divs for now
-  //check the boundaries of objects are touching, specificy 4 checks - one for each corner of the object
-  //removeAlien() if players bullet hits the alien then remove the alien from the array
+  //gotta fix the positions of the player
+  document.onkeydown = function(e) {
+    //move player left
+    if(playerX > leftBoard && e.keyCode === 37) {
+      playerX -= playerSpeed;
+      player.style.left = playerX + 'px';
+      //console.log(player.style.left);
+    } else if (playerX < (rightBoard-50) && e.keyCode === 39) {
+      playerX += playerSpeed;
+      player.style.left = playerX + 'px';
+      //console.log(player.style.left);
+    } else if (e.keyCode === 32) {
+      shootBullet();
+    }
+  };
 
-  //initialise the game...
-  startGame();
+  function shootBullet() {
+    console.log('spacebar pressed');
+    //code to shoot bullets when spacebar is pressed
+  }
+
 });
