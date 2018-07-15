@@ -1,14 +1,14 @@
-* {
+
+body {
   margin: 0;
   padding: 0;
 }
-body {}
 
-  .game-board {
-    border: 2px solid black;
+  .board {
     height: 700px;
     width: 700px;
     box-sizing: border-box;
+    background-color: black;
   }
 
   .player {
@@ -16,6 +16,8 @@ body {}
     height: 50px;
     background-color: red;
     position: absolute;
+    top: 600px;
+    left: 325px;
   }
 
   .invader {
@@ -29,8 +31,6 @@ body {}
   .bullet {
     width: 10px;
     height: 20px;
-    background-color: black;
+    background-color: yellow;
     position: absolute;
-    left: 20px;
-    top: 0px;
   }
