@@ -5,27 +5,26 @@ const gameBoard = document.querySelector('.board');
 
 let bullet;
 let bulletPosition = 0;
-let bulletSpeed = 10;
+let bulletSpeed = 20;
 let bullets = [];
 
 
-let invaders = [];
 let invader;
-// let invader = document.querySelector('.invader');
-let invaderX = 100;
-let invaderY = 0;
+//let invaders = [];
+const invaderX = 100;
+const invaderY = 0;
 const invaderSpeed = 10;
-const invaderDrop = 40;
+let invaderDrop = 40;
 let touchedRightSide = false;
 
 
 let player = document.querySelector('.player');
-//let bullet = document.querySelector('.bullet');
+
 
 //create player object
 const Player = {
-  x: 325,
-  y: 600,
+  x: 260,
+  y: 550,
   w: 50,
   h: 50,
   speed: 10
@@ -39,9 +38,26 @@ const Player = {
 //   speed: 10
 // };
 
-gameLoop();
-createPlayer();
-//createInvaders();
+let invaders = [];
+
+for (let i = 0; i < 7; i++) {
+  //create 5 invaders for now
+  invader = document.createElement('div');
+  //give them all a class
+  invader.classList.add('invader');
+  //add to screen
+  gameBoard.appendChild(invader);
+  //add invaders to array
+  invaders.push(invader);
+  //position them
+  invaders[i].style.left = (invaderX * i) + 'px';
+  invaders[i].style.top = invaderY + 'px';
+}
+console.log(invaders.length);
+//moveInvaderRight();
+
+
+
 
 //create player on screen
 function createPlayer() {
@@ -52,14 +68,31 @@ function createPlayer() {
 
 // function createInvaders() {
 //   for (let i = 0; i < 5; i++) {
+//     //create 5 invaders for now
 //     invader = document.createElement('div');
+//     //give them all a class
 //     invader.classList.add('invader');
-//     invaders.push(invader);
+//     //add to screen
 //     gameBoard.appendChild(invader);
+//     //add invaders to array
+//     invaders.push(invader);
+//     //position them
 //     invaders[i].style.left = (invaderX * i) + 'px';
 //   }
-//   moveInvaderRight();
+//   console.log(invaders.length);
+//   //moveInvaderRight();
 // }
+
+function moveInvaders() {
+  for(let i = 0 ; i < invaders.length ; i++ ) {
+    invaderDrop += 1;
+    invaders[i].style.top = invaderDrop + 'px';
+    console.log(invaders[i].style.top);
+    console.log(invaders[i]);
+  }
+}
+
+
 // //needs work
 // function moveInvaderRight() {
 //   if(touchedRightSide === false) {
@@ -122,6 +155,7 @@ document.onkeydown = function(e) {
 
   } else if (e.keyCode === 32) {
     createBullet();
+
   }
 };
 
@@ -130,7 +164,7 @@ function Bullet(){
   bullet = document.createElement('div');
   bullet.classList.add('bullet');
   gameBoard.appendChild(bullet);
-  bullet.style.left = Player.x + 20 + 'px';
+  bullet.style.left = Player.x + 65 + 'px';
   bullet.style.top = Player.y + 'px';
 }
 
@@ -140,25 +174,8 @@ function createBullet() {
   // console.log('bullets' + typeof(bullets));
   bullets.push(bullet);
   console.log(bullets.length);
-  // setInterval(function() {
-  //   if(bulletPosition > -600) {
-  //     bulletPosition -= bulletSpeed;
-  //     bullet.style.top = bulletPosition + 'px';
-  //     //checkCollision();
-  //   }
-  // }, 100);
 }
 
-function moveBullet() {
-  for(var i = 0 ; i < bullets.length ; i++ ) {
-    bullets[i].style.top = bullets[i].style.top - 8;
-  }
-}
-
-
-
-
-//
 //
 // function moveBullet() {
 //   for(let i = 0; i<bullets.length; i++){
@@ -168,12 +185,12 @@ function moveBullet() {
 //     bullets[i].style.top = bulletPosition + 'px';
 //     console.log('bullet top' + bullets[i].style.top);
 //   }
-  // bullets.forEach(function(element) {
-  //   console.log(element);
-  //   console.log(typeof(bullets));
+// bullets.forEach(function(element) {
+//   console.log(element);
+//   console.log(typeof(bullets));
 
-  //
-  // console.log('doing something');
+//
+// console.log('doing something');
 // }
 
 // function moveInvaders() {
@@ -185,7 +202,13 @@ function moveBullet() {
 
 function gameLoop() {
   // console.log('hello');
-  setTimeout(gameLoop, 1000);
-  moveBullet();
-  //moveInvaders();
+  setTimeout(gameLoop, 5000);
+  //moveBullet();
+  moveInvaders();
 }
+
+
+
+gameLoop();
+createPlayer();
+//createInvaders();

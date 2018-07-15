@@ -12,12 +12,13 @@ body {
   }
 
   .player {
-    width: 50px;
-    height: 50px;
-    background-color: red;
+    width: 140px;
+    height: 140px;
+    /* background-color: red; */
+    background-image: url('../images/ship (1).png');
     position: absolute;
-    top: 600px;
-    left: 325px;
+    top: 500px;
+    left: 230px;
   }
 
   .invader {
