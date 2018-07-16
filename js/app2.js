@@ -75,17 +75,17 @@ function createPlayer() {
 }
 
 function moveInvaders() {
-  console.log(invaderDrop);
-  if(invaderDrop < 600) {
+  if(invaderDrop < 550) {
     for(let i = 0 ; i < invaders.length ; i++ ) {
       invaderDrop += 1;
       invaders[i].style.top = invaderDrop + 'px';
       invaders[i].setAttribute('id', i);
     }
   } else {
-    console.log('game over');
+    const playerExplosion = setInterval(function() {
+      player.style.backgroundImage = 'url(\'./images/explosion.png\')';
+    }, 100);
   }
-
 }
 
 // //needs work
@@ -205,7 +205,7 @@ function checkCollision() {
     if((bulletTop < invaderBottom + 40) && (bulletRight > invaderLeft) && (bulletLeft < invaderRight)) {
       console.log('collision');
       const id = invaders[i].getAttribute('id');
-      invaders[id].style.backgroundColor = 'red';
+      //invaders[id].classList.add('explosion');
       //remove the invader from screen
       gameBoard.removeChild(invaders[id]);
       //stop the bullet from moving up
