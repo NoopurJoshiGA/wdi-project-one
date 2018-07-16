@@ -31,6 +31,12 @@ body {
     margin: 20px;
   }
 
+  .invadersBoard {
+    width: 70%;
+    margin: 0 auto;
+    position: absolute;
+  }
+
   .bullet {
     width: 10px;
     height: 20px;
