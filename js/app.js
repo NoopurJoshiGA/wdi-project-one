@@ -3,6 +3,8 @@
 const body = document.querySelector('body');
 const gameBoard = document.querySelector('.board');
 const invadersBoard = document.querySelector('.invadersBoard');
+const score = document.querySelector('.score');
+gameBoard.appendChild(score);
 gameBoard.appendChild(invadersBoard);
 
 //bullet for my variables

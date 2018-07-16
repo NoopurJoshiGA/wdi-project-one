@@ -3,7 +3,12 @@
 const body = document.querySelector('body');
 const gameBoard = document.querySelector('.board');
 const invadersBoard = document.querySelector('.invadersBoard');
+const scoreBoard = document.querySelector('.score');
+gameBoard.appendChild(scoreBoard);
 gameBoard.appendChild(invadersBoard);
+
+//score
+let score = 0;
 
 //bullet for my variables
 let bullet;
@@ -188,6 +193,9 @@ function shootBullet() {
       // console.log('GOING IN HERE');
       // clearInterval(fireBullet);
       checkCollision();
+    } else if(bulletPosition < 0){
+      clearInterval(fireBullet);
+      gameBoard.removeChild(bullet);
     }
   }, 50);
 }
@@ -205,7 +213,9 @@ function checkCollision() {
     if(((!invaders[i].classList.contains('hit')) && bulletTop < invaderBottom + 40) && (bulletRight > invaderLeft) && (bulletLeft < invaderRight)) {
       const id = invaders[i].getAttribute('id');
       //invaders[i].style.backgroundColor = 'red';
+
       invaders[i].classList.add('hit');
+
       console.log(id);
       //invaders[id].classList.add('explosion');
       //remove the invader from screen
@@ -215,11 +225,17 @@ function checkCollision() {
       console.log('clearing', fireBullet);
       //remove bullet from dom
       gameBoard.removeChild(bullet);
+
+      score += 10;
+      scoreBoard.innerHTML = 'Score: ' + score;
+
     }
 
     // another if to check if bullet has reached the top (if so, clear it anyway)
   }
 }
+
+
 
 function gameLoop() {
   // console.log('hello');

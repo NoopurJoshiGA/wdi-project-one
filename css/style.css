@@ -12,6 +12,17 @@ body {
     background-image: url('../images/background.jpg');
   }
 
+  .score {
+    color: mintcream;
+    font-family: monospace;
+    font-size: 1rem;
+    border: 2px solid mintcream;
+    width: 100px;
+    line-height: 50px;
+    text-decoration: bold;
+    padding: 5px;
+  }
+
   .player {
     width: 140px;
     height: 140px;
