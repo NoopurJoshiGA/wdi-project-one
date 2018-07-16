@@ -1,25 +1,36 @@
 
-//decalre all variables
+//declare all variables
 const body = document.querySelector('body');
 const gameBoard = document.querySelector('.board');
 
+//bullet for my variables
 let bullet;
-let bulletPosition = 0;
+let bulletPosition;
 let bulletSpeed = 20;
 let bullets = [];
 
-
+//invader variables
 let invader;
-//let invaders = [];
+let invaders = [];
 const invaderX = 100;
 const invaderY = 0;
 const invaderSpeed = 10;
 let invaderDrop = 40;
 let touchedRightSide = false;
 
+//collision properties
+let bulletTop;
+let bulletLeft;
+let bulletRight;
 
+let invaderLeft;
+let invaderRight;
+let invaderBottom;
+
+//player
 let player = document.querySelector('.player');
 
+let fireBullet;
 
 //create player object
 const Player = {
@@ -38,10 +49,8 @@ const Player = {
 //   speed: 10
 // };
 
-let invaders = [];
-
 for (let i = 0; i < 7; i++) {
-  //create 5 invaders for now
+  //create 7 invaders for now
   invader = document.createElement('div');
   //give them all a class
   invader.classList.add('invader');
@@ -53,11 +62,9 @@ for (let i = 0; i < 7; i++) {
   invaders[i].style.left = (invaderX * i) + 'px';
   invaders[i].style.top = invaderY + 'px';
 }
+
 console.log(invaders.length);
 //moveInvaderRight();
-
-
-
 
 //create player on screen
 function createPlayer() {
@@ -66,29 +73,12 @@ function createPlayer() {
   player.style.top = Player.y + 'px';
 }
 
-// function createInvaders() {
-//   for (let i = 0; i < 5; i++) {
-//     //create 5 invaders for now
-//     invader = document.createElement('div');
-//     //give them all a class
-//     invader.classList.add('invader');
-//     //add to screen
-//     gameBoard.appendChild(invader);
-//     //add invaders to array
-//     invaders.push(invader);
-//     //position them
-//     invaders[i].style.left = (invaderX * i) + 'px';
-//   }
-//   console.log(invaders.length);
-//   //moveInvaderRight();
-// }
-
 function moveInvaders() {
   for(let i = 0 ; i < invaders.length ; i++ ) {
     invaderDrop += 1;
     invaders[i].style.top = invaderDrop + 'px';
-    console.log(invaders[i].style.top);
-    console.log(invaders[i]);
+    // console.log(invaders[i].style.top);
+    // console.log(invaders[i]);
   }
 }
 
@@ -154,43 +144,108 @@ document.onkeydown = function(e) {
     player.style.left = Player.x + 'px';
 
   } else if (e.keyCode === 32) {
-    createBullet();
-
+    shootBullet();
   }
 };
 
-
 function Bullet(){
+  //create bullet element
   bullet = document.createElement('div');
+  //give bullet a class
   bullet.classList.add('bullet');
+  //add bullet to game screen
   gameBoard.appendChild(bullet);
+  //position bullet so it's in the center of the player
   bullet.style.left = Player.x + 65 + 'px';
   bullet.style.top = Player.y + 'px';
 }
 
-function createBullet() {
-  bullet = new Bullet();
-  console.log(typeof(bullet));
-  // console.log('bullets' + typeof(bullets));
-  bullets.push(bullet);
-  console.log(bullets.length);
+function shootBullet() {
+  //create bullet element
+  bullet = document.createElement('div');
+  //give bullet a class
+  bullet.classList.add('bullet');
+  //add bullet to game screen
+  gameBoard.appendChild(bullet);
+  //position bullet so it's in the center of the player
+  bullet.style.left = Player.x + 65 + 'px';
+  bullet.style.top = Player.y + 'px';
+
+  bulletPosition = Player.y;
+  fireBullet = setInterval(function() {
+    //make sure bullet doesn't go to infinity and beyond
+    if(bulletPosition > 0 ) {
+      bulletPosition -= 10;
+      bullet.style.top = bulletPosition + 'px';
+    }
+    checkCollision();
+  }, 100);
 }
 
-//
-// function moveBullet() {
-//   for(let i = 0; i<bullets.length; i++){
-//     bulletPosition -= bulletSpeed;
-//     //this is working
-//     console.log(bulletPosition);
-//     bullets[i].style.top = bulletPosition + 'px';
-//     console.log('bullet top' + bullets[i].style.top);
-//   }
-// bullets.forEach(function(element) {
-//   console.log(element);
-//   console.log(typeof(bullets));
+function checkCollision() {
 
-//
-// console.log('doing something');
+  for(let i=0; i<invaders.length; i++) {
+
+    invaderBottom = invader.getBoundingClientRect().top;
+    invaderLeft = invaders[i].getBoundingClientRect().left;
+    invaderRight = invaderLeft + 40;
+
+    console.log('invaderRight ===> ' + invaderRight);
+    console.log('bulletLeft ===>' + bulletLeft);
+
+    bulletRight = bulletLeft + 10;
+    bulletTop = bullet.getBoundingClientRect().top;
+
+    //bulletTop === invader invaderBottom
+    //bulletRight > invaderLeft
+    //bulletleft < invaderight
+
+    if((bulletTop < invaderBottom + 40) && (bulletRight > invaderLeft) && (bulletLeft < invaderRight)) {
+      console.log('collision');
+      console.log('bullet collided with', invaders[i]);
+      clearInterval(fireBullet);
+
+
+      // && bulletLeft < invaderRight
+      // (bulletLeft < invaderLeft && bulletRight > invaderLeft)
+      //removeBullet();
+
+      //removeInvader();
+    }
+  }
+}
+
+
+
+// function shootBullet() {
+//   //create bullet element
+//   bullet = document.createElement('div');
+//   //give bullet a class
+//   bullet.classList.add('bullet');
+//   //add bullet to game screen
+//   gameBoard.appendChild(bullet);
+//   //position bullet so it's in the center of the player
+//   bullet.style.left = Player.x + 65 + 'px';
+//   bullet.style.top = Player.y + 'px';
+//   // bullet = new Bullet();
+//   // bullets.push({x: Player.x + 65, y: Player.y - 20});
+//   let topPosition = Player.y;
+//   setInterval(function() {
+//     if(topPosition < 600) {
+//     console.log(bullet.style.top);
+//     bullet.style.top = topPosition + 'px';
+//     topPosition -= 10;
+//   }
+//   }, 100);
+// }
+
+
+
+// function moveBullet() {
+//   for(let i = 0 ; i < bullets.length ; i++ ) {
+//     //console.log(bullets[i]);
+//     bullets[i].y = bullets[i].y + 10;
+//   }
 // }
 
 // function moveInvaders() {
@@ -202,9 +257,10 @@ function createBullet() {
 
 function gameLoop() {
   // console.log('hello');
-  setTimeout(gameLoop, 5000);
+  setTimeout(gameLoop, 500);
   //moveBullet();
   moveInvaders();
+
 }
 
 

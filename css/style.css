@@ -8,14 +8,15 @@ body {
     height: 700px;
     width: 700px;
     box-sizing: border-box;
-    background-color: black;
+    /* background-color: black; */
+    background-image: url('../images/background.jpg');
   }
 
   .player {
     width: 140px;
     height: 140px;
     /* background-color: red; */
-    background-image: url('../images/ship (1).png');
+    background-image: url('../images/ship.png');
     position: absolute;
     top: 500px;
     left: 230px;
@@ -34,4 +35,5 @@ body {
     height: 20px;
     background-color: yellow;
     position: absolute;
+    top: 0px;
   }
