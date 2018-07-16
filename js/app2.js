@@ -49,6 +49,7 @@ const Player = {
 //   speed: 10
 // };
 
+//create the invaders
 for (let i = 0; i < 7; i++) {
   //create 7 invaders for now
   invader = document.createElement('div');
@@ -74,14 +75,18 @@ function createPlayer() {
 }
 
 function moveInvaders() {
-  for(let i = 0 ; i < invaders.length ; i++ ) {
-    invaderDrop += 1;
-    invaders[i].style.top = invaderDrop + 'px';
-    // console.log(invaders[i].style.top);
-    // console.log(invaders[i]);
+  console.log(invaderDrop);
+  if(invaderDrop < 600) {
+    for(let i = 0 ; i < invaders.length ; i++ ) {
+      invaderDrop += 1;
+      invaders[i].style.top = invaderDrop + 'px';
+      invaders[i].setAttribute('id', i);
+    }
+  } else {
+    console.log('game over');
   }
-}
 
+}
 
 // //needs work
 // function moveInvaderRight() {
@@ -193,24 +198,20 @@ function checkCollision() {
     console.log('invaderRight ===> ' + invaderRight);
     console.log('bulletLeft ===>' + bulletLeft);
 
+    bulletLeft = bullet.getBoundingClientRect().left;
     bulletRight = bulletLeft + 10;
     bulletTop = bullet.getBoundingClientRect().top;
 
-    //bulletTop === invader invaderBottom
-    //bulletRight > invaderLeft
-    //bulletleft < invaderight
-
     if((bulletTop < invaderBottom + 40) && (bulletRight > invaderLeft) && (bulletLeft < invaderRight)) {
       console.log('collision');
-      console.log('bullet collided with', invaders[i]);
+      const id = invaders[i].getAttribute('id');
+      invaders[id].style.backgroundColor = 'red';
+      //remove the invader from screen
+      gameBoard.removeChild(invaders[id]);
+      //stop the bullet from moving up
       clearInterval(fireBullet);
-
-
-      // && bulletLeft < invaderRight
-      // (bulletLeft < invaderLeft && bulletRight > invaderLeft)
-      //removeBullet();
-
-      //removeInvader();
+      //remove bullet from dom
+      gameBoard.removeChild(bullet);
     }
   }
 }
@@ -260,7 +261,6 @@ function gameLoop() {
   setTimeout(gameLoop, 500);
   //moveBullet();
   moveInvaders();
-
 }
 
 
