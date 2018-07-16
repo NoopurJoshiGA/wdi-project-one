@@ -27,7 +27,8 @@ body {
     height: 40px;
     background-color: blue;
     display: inline-block;
-    position: absolute;
+    position: relative;
+    margin: 20px;
   }
 
   .bullet {
@@ -43,3 +44,7 @@ body {
     width: 100px;
     height: 100px;
   }
+
+.hit {
+  visibility: hidden;
+}
