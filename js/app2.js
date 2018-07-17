@@ -284,7 +284,7 @@ function enterBoss() {
 
   //randomly move boss left and right
   setInterval(function(){
-    // moveBoss();
+    moveBoss();
   }, 2000);
 }
 
@@ -293,12 +293,11 @@ function shootLaser() {
   console.log('generating beam...');
   const laser = document.createElement('div');
   laser.classList.add('laser');
-  gameBoard.appendChild(laser);
+  boss.appendChild(laser);
   //position bullet so it's in the center of the player
-  console.log(Boss.x);
   console.log(Boss.y);
-  laser.style.left = Boss.x + 95 + 'px';
-  laser.style.top = Boss.y + 75 + 'px';
+  laser.style.left = '97.5px';
+  laser.style.top = '75px';
 
   //start firing the bullet from the same height as the player
   let laserPosition = Boss.y;
@@ -324,7 +323,7 @@ function shootLaser() {
         clearInterval(fireLaser);
         laserPosition = 0;
         laser.style.height = '0px';
-      }, 2000);
+      }, 1000);
     }
   }, 50);
 }
@@ -341,7 +340,7 @@ function checkBossCollision(laser) {
   const laserLeft = laser.getBoundingClientRect().left;
   const laserRight = laserLeft + 10;
 
-  // collision detection conditionals
+  // collision detection conditionals between laser beam and player
   if((laserBottom >= playerTop) && (laserRight > playerLeft) && (laserLeft < playerRight)) {
     alert('player hit');
     //return true;
@@ -349,46 +348,43 @@ function checkBossCollision(laser) {
   //  return false;
 }
 
+// move boss
+function moveBoss() {
+  //create an array of directions the boss can move in
+  const directions = ['left', 'right'];
+  let direction = Math.floor((Math.random() * 2));
 
+  //generate random distance (death star can move up between 100px and 200px left or right)
+  let distance = Math.floor((Math.random() * 150) + 100);
+  // console.log(distance);
 
-//move boss
-// function moveBoss() {
-//   //create an array of directions the boss can move in
-//   const directions = ['left', 'right'];
-//   let direction = Math.floor((Math.random() * 2));
-//
-//   //generate random distance (death star can move up between 100px and 200px left or right)
-//   let distance = Math.floor((Math.random() * 200) + 100);
-//   // console.log(distance);
-//
-//   let bossLeft = boss.getBoundingClientRect().left;
-//   let bossRight = boss.getBoundingClientRect().left + 150;
-//
-//   // let leftBound = 0;
-//   // let rightBound = 600;
-//
-//   switch(directions[direction]){
-//     case 'left': {
-//       if((bossLeft+distance) > 0 ){
-//         console.log(bossLeft + distance);
-//         // bossLeft -= distance;
-//         boss.style.left = (bossLeft - distance) + 'px';
-//       } else {
-//         boss.style.left = '150px';
-//       }
-//       break;
-//     }
-//     case 'right': {
-//       if((bossRight+distance) < 550) {
-//         console.log(bossRight+distance);
-//         boss.style.left = bossLeft + 'px';
-//       } else {
-//         boss.style.left = '550px';
-//       }
-//       break;
-//     }
-//   }
-// }
+  let bossLeft = boss.getBoundingClientRect().left;
+  let bossRight = boss.getBoundingClientRect().left + 200;
+
+  switch(directions[direction]){
+    case 'left': {
+      if((bossLeft-distance) > 0 ){
+        console.log(distance);
+        console.log('boss left + distance', bossLeft + distance);
+
+        boss.style.left = (bossLeft-distance) + 'px';
+      } else {
+        boss.style.left = '100px';
+      }
+      break;
+    }
+    case 'right': {
+      console.log('distance',distance);
+      if((bossRight+distance) < 500) {
+        console.log('boss right + distance', bossRight + distance);
+        boss.style.left = bossLeft + distance + 'px';
+      } else {
+        boss.style.left = '450px';
+      }
+      break;
+    }
+  }
+}
 
 
 
