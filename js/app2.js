@@ -43,6 +43,16 @@ const Player = {
   speed: 20
 };
 
+//create boss object
+let boss;
+
+const Boss = {
+  x: 300,
+  y: 50,
+  w: 100,
+  h: 100
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,8 +199,6 @@ function checkCollision(bullet) {
       scoreBoard.innerHTML = 'Score: ' + score;
 
       return true;
-      //checkLoss();
-
     }
 
     // another if to check if bullet has reached the top (if so, clear it anyway)
@@ -224,28 +232,115 @@ function checkLoss(){
 
 function checkWin() {
   //if all 21 invaders have been hit, then you win the game hurray!
-  if(document.querySelectorAll('.hit').length === 21) {
+  if(document.querySelectorAll('.hit').length === 1) {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
-    gameBoard.removeChild(player);
-    gameBoard.removeChild(scoreBoard);
-
+    // gameBoard.removeChild(player);
+    // gameBoard.removeChild(scoreBoard);
     //remove any bullets left on the screen
     const selectAllBullets = document.querySelectorAll('.bullet');
     selectAllBullets.forEach(bullet => {
       gameBoard.removeChild(bullet);
     });
-
     //clear any intervals
     clearInterval(moveInvaderLeft);
     clearInterval(moveInvaderRight);
 
-    const gameOverMessage = document.createElement('div');
-    gameBoard.appendChild(gameOverMessage);
-    gameOverMessage.classList.add('gameOverMessage');
-    gameOverMessage.innerHTML = 'Congratulations! You\'ve saved the galaxy';
+    // const gameOverMessage = document.createElement('div');
+    // gameBoard.appendChild(gameOverMessage);
+    // gameOverMessage.classList.add('gameOverMessage');
+    // gameOverMessage.innerHTML = 'Congratulations! You\'ve saved the galaxy';
+
+    enterBoss();
   }
 }
+
+function enterBoss() {
+  boss = document.createElement('div');
+  gameBoard.appendChild(boss);
+  boss.classList.add('boss');
+  //moveBoss();
+  //position boss in the middle
+  boss.style.left = Boss.x + 'px';
+  boss.style.top = Boss.y + 'px';
+
+  setInterval(function(){
+    generateBossBullets();
+  }, 2000);
+}
+
+//this runs every 2 seconds
+function generateBossBullets() {
+  console.log('generating bullet...');
+  //create bullet element
+  const bossBullet = document.createElement('div');
+  //give bullet a class
+  bossBullet.classList.add('bossBullet');
+  //add bullet to game screen
+  boss.appendChild(bossBullet);
+  //position bullet so it's in the center of the player
+  bossBullet.style.left = Boss.x + 50 + 'px';
+  bossBullet.style.top = Boss.y + 100 + 'px';
+  //start firing the bullet from the same height as the player
+  let bossBulletPosition = Boss.y + 100;
+  const fireBossBullet = setInterval(function() {
+    if(bossBulletPosition < 650) {
+      //make sure bullet doesn't go beyond the player
+      bossBulletPosition += 10;
+      bossBullet.style.height = bossBulletPosition + 'px';
+      //if a collision has been detected
+      //stop moving the bullet
+      if(checkBossCollision(bossBullet)) {
+        clearInterval(fireBossBullet);
+      }
+    } else if(bossBulletPosition >= 650){
+      //if bullet goes out of bounds
+      //remove the bullet from game screen
+      clearInterval(fireBossBullet);
+      boss.removeChild(bossBullet);
+    }
+  }, 20);
+}
+
+function checkBossCollision(bossBullet) {
+  //get corners of the bossBullet and player
+  const playerTop = Player.x;
+  const playerLeft = player.getBoundingClientRect().left;
+  const playerRight = playerLeft + 140;
+
+  const bossBulletBottom = bossBullet.getBoundingClientRect().height;
+  const bossBulletLeft = bossBullet.getBoundingClientRect().left;
+  const bossBulletRight = bossBulletLeft + 10;
+  console.log('boss bullet bottom ====> ' ,bossBulletBottom);
+  console.log('player top  ====> ' ,playerTop);
+  //collision detection conditionals
+  if(bossBulletBottom === playerTop) {
+    console.log('player hit');
+    return true;
+  }
+  return false;
+}
+
+
+
+// function moveBoss() {
+// //create an array of directions the boss can move in
+// const directions = ['left', 'right', 'up', 'down'];
+// let direction = 'left';
+// // Math.floor((Math.random() * 3));
+// //generate random distance
+// let distance = Math.floor((Math.random() * 100));
+//
+// switch(direction){
+//   case 'left': {
+//     // if(boss aint out bounds){
+//     Boss.x += distance;
+//     boss.style.left = Boss.x + "px";
+//     // }
+//     break;
+//   //   }
+//   }
+// }
 
 gameLoop();
 createPlayer();

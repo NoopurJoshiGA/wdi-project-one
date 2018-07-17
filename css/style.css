@@ -59,6 +59,12 @@ body {
     top: 0px;
   }
 
+  .bossBullet {
+    width: 10px;
+    height: 10px;
+    background-color: green;
+  }
+
   .explosion {
     background-image: url('../images/explosion.png');
     width: 100px;
@@ -81,4 +87,12 @@ body {
   padding: 50px;
   position: absolute;
   font-size: 1rem;
+}
+
+
+.boss {
+  width: 100px;
+  height: 100px;
+  background-color: blue;
+  position: absolute;
 }
