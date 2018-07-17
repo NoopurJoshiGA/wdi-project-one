@@ -62,7 +62,7 @@ body {
   .bossBullet {
     width: 10px;
     height: 10px;
-    background-color: green;
+    background-color: #32CD32;
   }
 
   .explosion {
@@ -95,4 +95,5 @@ body {
   height: 100px;
   background-color: blue;
   position: absolute;
+  transition: left 2s;
 }
