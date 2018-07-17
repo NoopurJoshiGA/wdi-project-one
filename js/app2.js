@@ -25,25 +25,11 @@ let invaderPositionTop = 60;
 //speed at which the invaders will move
 const invaderSpeed = 1;
 //distance the invaders will drop after touching the sides
-let invaderDrop = 20;
+let invaderDrop = 100;
 let touchedRightSide = false;
 
-//bullet for my variables
-// let bullet;
-// let bulletPosition;
-//speed at which the bullet with fire
+//speed at which the bullet will fire
 const bulletSpeed = 20;
-
-// let bullets = [];
-
-
-//collision properties
-// let bulletTop;
-// let bulletLeft;
-// // let bulletRight;
-// let invaderLeft;
-// let invaderRight;
-// let invaderBottom;
 
 //player
 let player = document.querySelector('.player');
@@ -56,16 +42,6 @@ const Player = {
   h: 50,
   speed: 20
 };
-
-// let fireBullet;
-
-// const Bullet = {
-//   x: Player.x + 25,
-//   y: Player.y,
-//   w: 10,
-//   h: 20,
-//   speed: 10
-// };
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
@@ -105,8 +81,6 @@ function moveInvaderRight() {
     const moveRight = setInterval(function() {
       if(invaderPositionLeft < 130) {
         invaderPositionLeft += invaderSpeed;
-        console.log(invaderPositionTop);
-        // console.log('position from top', invadersBoard.getBoundingClientRect().top);
         invadersBoard.style.left = invaderPositionLeft + 'px';
       } else {
         clearInterval(moveRight);
@@ -119,10 +93,7 @@ function moveInvaderRight() {
 
 function dropInvader(touchedRightSide) {
   if(touchedRightSide) {
-    console.log('position from the top is ===> ' , invaderPositionTop);
-    console.log('it should drop by ====> ' ,invaderDrop);
     invaderPositionTop += invaderDrop;
-    console.log(invaderPositionTop);
     invadersBoard.style.top = invaderPositionTop + 'px';
     moveInvaderLeft();
   } else {
@@ -163,18 +134,6 @@ document.onkeydown = function(e) {
   }
 };
 
-function Bullet(){
-  //create bullet element
-  bullet = document.createElement('div');
-  //give bullet a class
-  bullet.classList.add('bullet');
-  //add bullet to game screen
-  gameBoard.appendChild(bullet);
-  //position bullet so it's in the center of the player
-  bullet.style.left = Player.x + 65 + 'px';
-  bullet.style.top = Player.y + 'px';
-}
-
 function shootBullet() {
   //create bullet element
   const bullet = document.createElement('div');
@@ -185,19 +144,22 @@ function shootBullet() {
   //position bullet so it's in the center of the player
   bullet.style.left = Player.x + 65 + 'px';
   bullet.style.top = Player.y + 'px';
-  // bullet = new Bullet();
+  //start firing the bullet from the same height as the player
   let bulletPosition = Player.y;
   const fireBullet = setInterval(function() {
     if(bulletPosition > 0 ) {
-      console.log('firing');
       //make sure bullet doesn't go to infinity and beyond
       bulletPosition -= bulletSpeed;
       bullet.style.top = bulletPosition + 'px';
+      //if a collision has been detected
+      //stop moving the bullet
       if(checkCollision(bullet)) {
         clearInterval(fireBullet);
       }
     } else if(bulletPosition <= 0){
+      //if bullet goes out of bounds
       clearInterval(fireBullet);
+      //remove the bullet from game screen
       gameBoard.removeChild(bullet);
     }
   }, 50);
@@ -205,7 +167,7 @@ function shootBullet() {
 
 function checkCollision(bullet) {
   for(let i=0; i<invaders.length; i++) {
-
+    //get corners of the bullets and invaders
     const invaderBottom = invaders[i].getBoundingClientRect().top;
     const invaderLeft = invaders[i].getBoundingClientRect().left;
     const invaderRight = invaderLeft + 40;
@@ -214,26 +176,21 @@ function checkCollision(bullet) {
     const bulletRight = bulletLeft + 10;
     const bulletTop = bullet.getBoundingClientRect().top;
 
+    //collision detection conditionals
     if(((!invaders[i].classList.contains('hit')) && bulletTop < invaderBottom + 40) && (bulletRight > invaderLeft) && (bulletLeft < invaderRight)) {
       const id = invaders[i].getAttribute('id');
-      //invaders[i].style.backgroundColor = 'red';
-
+      //add a class of hit to the invader, this will help determine whether or not you've won the game
       invaders[i].classList.add('hit');
-
-      console.log(id);
-      //invaders[id].classList.add('explosion');
-      //remove the invader from screen
-      //gameBoard.removeChild(invaders[id]);
-      //stop the bullet from moving up
-      // clearInterval(fireBullet);
       //remove bullet from dom
       gameBoard.removeChild(bullet);
-
+      //increase score
       score += 10;
+      //display the score
       scoreBoard.innerHTML = 'Score: ' + score;
-      checkWin();
-      checkLoss();
+
       return true;
+      //checkLoss();
+
     }
 
     // another if to check if bullet has reached the top (if so, clear it anyway)
@@ -244,11 +201,9 @@ function checkCollision(bullet) {
 
 
 function gameLoop() {
-  // console.log('hello');
   setTimeout(gameLoop, 1000);
   checkLoss();
-  //moveBullet();
-
+  checkWin();
 }
 
 function checkLoss(){
@@ -256,36 +211,41 @@ function checkLoss(){
     if(invaders[i].getBoundingClientRect().top > 600) {
       console.log(invaders[i].getBoundingClientRect().top);
       console.log('game over');
+      gameBoard.removeChild(invadersBoard);
+      gameBoard.removeChild(player);
+      gameBoard.removeChild(scoreBoard);
+      const gameOverMessage = document.createElement('div');
+      gameBoard.appendChild(gameOverMessage);
+      gameOverMessage.classList.add('gameOverMessage');
+      gameOverMessage.innerHTML = 'You\'ve been defeated';
     }
   }
 }
 
 function checkWin() {
-  //if all 21 invaders have been hit, then you win the game
-  if(document.querySelectorAll('.hit').length === 10) {
-    console.log('youve won');
+  //if all 21 invaders have been hit, then you win the game hurray!
+  if(document.querySelectorAll('.hit').length === 21) {
+    //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
-    // clearInterval(fireBullet);
     gameBoard.removeChild(player);
     gameBoard.removeChild(scoreBoard);
-    // gameBoard.removeChild(bullet);
+
+    //remove any bullets left on the screen
     const selectAllBullets = document.querySelectorAll('.bullet');
     selectAllBullets.forEach(bullet => {
       gameBoard.removeChild(bullet);
-
-
     });
-    // bullet.classList.remove('.bullet');
+
+    //clear any intervals
     clearInterval(moveInvaderLeft);
     clearInterval(moveInvaderRight);
-    const winMessage = document.createElement('div');
-    gameBoard.appendChild(winMessage);
-    winMessage.classList.add('winMessage');
-    winMessage.innerHTML = 'Congratulations! You\'ve saved the galaxy';
+
+    const gameOverMessage = document.createElement('div');
+    gameBoard.appendChild(gameOverMessage);
+    gameOverMessage.classList.add('gameOverMessage');
+    gameOverMessage.innerHTML = 'Congratulations! You\'ve saved the galaxy';
   }
 }
-
-
 
 gameLoop();
 createPlayer();
