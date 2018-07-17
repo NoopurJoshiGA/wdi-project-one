@@ -40,13 +40,15 @@ body {
     background-image: url('../images/invaders.gif');
     display: inline-block;
     position: relative;
-    margin: 20px;
+    margin: 0 20px 20px 20px;
   }
 
   .invadersBoard {
-    width: 70%;
+    width: 65%;
     margin: 0 auto;
     position: absolute;
+    text-align: center;
+    top: 60px;
   }
 
   .bullet {
@@ -65,4 +67,18 @@ body {
 
 .hit {
   visibility: hidden;
+}
+
+.winMessage {
+  color: mintcream;
+  border: 2px solid mintcream;
+  font-family: monospace;
+  text-align: center;
+  box-sizing: border-box;
+  background-color: #f5fffa40;
+  top: 300px;
+  left: 150px;
+  padding: 50px;
+  position: absolute;
+  font-size: 1rem;
 }
