@@ -47,10 +47,10 @@ const Player = {
 let boss;
 
 const Boss = {
-  x: 300,
+  x: 250,
   y: 50,
-  w: 100,
-  h: 100
+  w: 150,
+  h: 150
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,25 +262,29 @@ function checkLevelWin() {
 
 //ENTER THE DEATH STARRRRRRRR :@:@:@:@
 function enterBoss() {
+  //change the background to make game look cool
   gameBoard.style.backgroundImage = 'url("images/starwarsbg.png")';
   gameBoard.style.backgroundSize = 'cover';
+
+  //create the boss element (death star)
   boss = document.createElement('div');
+  //add it to the game board
   gameBoard.appendChild(boss);
+  //add a class
   boss.classList.add('boss');
 
-  //randomly move boss left and right
-
-  //position boss in the middle
+  //position boss in the middle of the screen to begin with
   boss.style.left = Boss.x + 'px';
   boss.style.top = Boss.y + 'px';
 
+  //death star shoots laser beam every 5 seconds
   setInterval(function(){
     shootLaser();
   }, 5000);
 
-
+  //randomly move boss left and right
   setInterval(function(){
-    moveBoss();
+    // moveBoss();
   }, 2000);
 }
 
@@ -289,24 +293,27 @@ function shootLaser() {
   console.log('generating beam...');
   const laser = document.createElement('div');
   laser.classList.add('laser');
-  boss.appendChild(laser);
+  gameBoard.appendChild(laser);
   //position bullet so it's in the center of the player
-  laser.style.left = Boss.x + 50 + 'px';
-  laser.style.top = Boss.y + 100 + 'px';
+  console.log(Boss.x);
+  console.log(Boss.y);
+  laser.style.left = Boss.x + 95 + 'px';
+  laser.style.top = Boss.y + 75 + 'px';
 
   //start firing the bullet from the same height as the player
   let laserPosition = Boss.y;
 
   const fireLaser = setInterval(function() {
-    if(laserPosition < 650) {
-      //make sure bullet doesn't go beyond the player
+    //make sure bullet doesn't go beyond the player
+    if(laserPosition < 560) {
       laserPosition += 30;
       laser.style.height = laserPosition + 'px';
       //if a collision has been detected
-      //stop moving the bullet
-      //   if(checkBossCollision(laser)) {
-      //     clearInterval(fireBossBullet);
-      //   }
+      //stop the laser
+      //game over
+      if(checkBossCollision(laser)) {
+        clearInterval(fireLaser);
+      }
       // } else if(laserPosition >= 650){
       //   //if bullet goes out of bounds
       //   //remove the bullet from game screen
@@ -322,66 +329,67 @@ function shootLaser() {
   }, 50);
 }
 
+//collision detection between player and laser beam
+function checkBossCollision(laser) {
+  //get corners of the laser and player
+
+  const playerTop = player.getBoundingClientRect().top;
+  const playerLeft = player.getBoundingClientRect().left;
+  const playerRight = playerLeft + 140;
+
+  const laserBottom = laser.getBoundingClientRect().height;
+  const laserLeft = laser.getBoundingClientRect().left;
+  const laserRight = laserLeft + 10;
+
+  // collision detection conditionals
+  if((laserBottom >= playerTop) && (laserRight > playerLeft) && (laserLeft < playerRight)) {
+    alert('player hit');
+    //return true;
+  }
+  //  return false;
+}
 
 
 
+//move boss
+// function moveBoss() {
+//   //create an array of directions the boss can move in
+//   const directions = ['left', 'right'];
+//   let direction = Math.floor((Math.random() * 2));
 //
-// function checkBossCollision(laser) {
-//   //get corners of the laser and player
-//   const playerTop = Player.x;
-//   const playerLeft = player.getBoundingClientRect().left;
-//   const playerRight = playerLeft + 140;
+//   //generate random distance (death star can move up between 100px and 200px left or right)
+//   let distance = Math.floor((Math.random() * 200) + 100);
+//   // console.log(distance);
 //
-//   const laserBottom = laser.getBoundingClientRect().height;
-//   const laserLeft = laser.getBoundingClientRect().left;
-//   const laserRight = laserLeft + 10;
-//   console.log('boss bullet bottom ====> ' ,laserBottom);
-//   console.log('player top  ====> ' ,playerTop);
-//   //collision detection conditionals
-//   if(laserBottom === playerTop) {
-//     console.log('player hit');
-//     return true;
+//   let bossLeft = boss.getBoundingClientRect().left;
+//   let bossRight = boss.getBoundingClientRect().left + 150;
+//
+//   // let leftBound = 0;
+//   // let rightBound = 600;
+//
+//   switch(directions[direction]){
+//     case 'left': {
+//       if((bossLeft+distance) > 0 ){
+//         console.log(bossLeft + distance);
+//         // bossLeft -= distance;
+//         boss.style.left = (bossLeft - distance) + 'px';
+//       } else {
+//         boss.style.left = '150px';
+//       }
+//       break;
+//     }
+//     case 'right': {
+//       if((bossRight+distance) < 550) {
+//         console.log(bossRight+distance);
+//         boss.style.left = bossLeft + 'px';
+//       } else {
+//         boss.style.left = '550px';
+//       }
+//       break;
+//     }
 //   }
-//   return false;
 // }
 
-
-
-function moveBoss() {
-  //create an array of directions the boss can move in
-  const directions = ['left', 'right'];
-  let direction = Math.floor((Math.random() * 2));
-
-  //generate random distance (death star can move up to 100px either way)
-  let distance = Math.floor((Math.random() * 200) + 100);
-  console.log(distance);
-
-  let bossLeft = boss.getBoundingClientRect().left;
-  let bossRight = boss.getBoundingClientRect().left + 100;
-  let leftBound = 0;
-  let rightBound = 600;
-
-  switch(directions[direction]){
-    case 'left': {
-      if(bossLeft > leftBound) {
-        bossLeft -= distance;
-        console.log(bossLeft);
-        boss.style.left = bossLeft + 'px';
-      } else {
-        bossLeft += distance;
-      }
-      break;
-    }
-    case 'right': {
-      bossLeft += distance;
-      if(bossRight < rightBound) {
-        console.log(bossLeft);
-        boss.style.left = bossLeft + 'px';
-        break;
-      }
-    }
-  }
-}
 
 
 gameLoop();

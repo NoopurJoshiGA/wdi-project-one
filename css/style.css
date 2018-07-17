@@ -61,7 +61,7 @@ body {
 
   .laser {
     width: 10px;
-    height: 10px;
+    position: absolute;
     background-color: #9fff30;
     box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 10px #9fff30, 0 0 20px #9fff30, 0 0 40px #9fff30, 0 0 35px #9fff30, 0 0 55px #9fff30;
   }
