@@ -7,9 +7,8 @@ body {
   .board {
     height: 700px;
     width: 700px;
-    box-sizing: border-box;
-    /* background-color: black; */
-    background-image: url('../images/background.jpg');
+    background-size: cover;
+    background-image: url('../images/deathstarbg.png');
   }
 
   .score {
@@ -26,7 +25,6 @@ body {
   .player {
     width: 140px;
     height: 140px;
-    /* background-color: red; */
     background-image: url('../images/ship.png');
     position: absolute;
     top: 500px;
@@ -36,15 +34,16 @@ body {
   .invader {
     width: 40px;
     height: 40px;
-    /* background-color: blue; */
-    background-image: url('../images/invaders.gif');
+    background-size: contain;
+    /* background-image: url('../images/invaders.gif'); */
+    background-image: url('../images/tiefighter.png');
     display: inline-block;
     position: relative;
     margin: 0 20px 20px 20px;
   }
 
   .invadersBoard {
-    width: 65%;
+    width: 40%;
     margin: 0 auto;
     position: absolute;
     text-align: center;
@@ -52,17 +51,19 @@ body {
   }
 
   .bullet {
-    width: 10px;
-    height: 20px;
-    background-color: yellow;
+    width: 5px;
+    height: 30px;
+    background-color: #FFC107;
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 10px #ff9212, 0 0 20px #ff9212, 0 0 40px #ff9212, 0 0 35px #ff9212, 0 0 55px #ff9212;
     position: absolute;
     top: 0px;
   }
 
-  .bossBullet {
+  .laser {
     width: 10px;
     height: 10px;
-    background-color: #32CD32;
+    background-color: #9fff30;
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 10px #9fff30, 0 0 20px #9fff30, 0 0 40px #9fff30, 0 0 35px #9fff30, 0 0 55px #9fff30;
   }
 
   .explosion {
@@ -91,9 +92,11 @@ body {
 
 
 .boss {
-  width: 100px;
-  height: 100px;
-  background-color: blue;
+  width: 200px;
+  height: 200px;
+  /* background-color: blue; */
+  background-image: url('../images/deathstar.png');
+  background-size: contain;
   position: absolute;
   transition: left 2s;
 }
