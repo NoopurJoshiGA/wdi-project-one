@@ -53,6 +53,28 @@ const Boss = {
   h: 150
 };
 
+//create background music
+const music = document.getElementById('music');
+const musicOn = document.querySelector('.fa-volume-up');
+const musicOff = document.querySelector('.fa-volume-off');
+
+musicOff.addEventListener('click', playMusic);
+musicOn.addEventListener('click', pauseMusic);
+
+function playMusic() {
+  music.play();
+  musicOff.style.visibility = 'hidden';
+  musicOn.style.visibility = 'visible';
+}
+
+function pauseMusic() {
+  music.pause();
+  musicOff.style.visibility = 'visible';
+  musicOn.style.visibility = 'hidden';
+}
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -242,7 +264,7 @@ function checkLoss(){
 
 function checkLevelWin() {
   //if all 28 invaders have been hit, then you go to the boss level
-  if(document.querySelectorAll('.hit').length === 2) {
+  if(document.querySelectorAll('.hit').length === 27) {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
 

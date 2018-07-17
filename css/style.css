@@ -12,14 +12,14 @@ body {
   }
 
   .score {
-    color: mintcream;
+    /* color: mintcream;
     font-family: monospace;
     font-size: 1rem;
     border: 2px solid mintcream;
     width: 100px;
     line-height: 50px;
     text-decoration: bold;
-    padding: 5px;
+    padding: 5px; */
   }
 
   .player {
@@ -90,7 +90,6 @@ body {
   font-size: 1rem;
 }
 
-
 .boss {
   width: 200px;
   height: 200px;
@@ -99,4 +98,22 @@ body {
   background-size: contain;
   position: absolute;
   transition: left 2s;
+}
+
+.fas {
+  color: white;
+  font-size: 2rem;
+  padding: 5px;
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  opacity: 0.8;
+}
+
+.fa-volume-up {
+  visibility: hidden;
+}
+
+.fa-volume-off {
+
 }
