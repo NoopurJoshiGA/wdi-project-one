@@ -61,7 +61,6 @@ const Boss = {
   h: 150
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// GAME MUSIC /////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,7 +185,7 @@ function objectsCollide(obj1, obj2) {
   const box1 = obj1.getBoundingClientRect();
   const box2 = obj2.getBoundingClientRect();
   return (box1.right > box2.left) && (box1.left < box2.right)
-    && (box1.top < box2.bottom) && (box1.bottom > box2.top);
+  && (box1.top < box2.bottom) && (box1.bottom > box2.top);
 }
 
 function checkPlayerCollision() {
@@ -223,7 +222,6 @@ function removeBullet(bullet) {
   clearInterval(bullet.intervalId);
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// SHOOT BULLET ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -257,9 +255,17 @@ function shootBullet() {
 ////////////////////////////////////////////////////////////////////////////////
 
 function bulletHitBoss(bullet) {
-  // TODO: Make this actually work!
-  //remove bullet from dom
-  gameBoard.removeChild(bullet);
+  //make death star red
+  const hitEnemy = setTimeout(function() {
+    boss.style.backgroundImage = 'url("images/deathstarhit.png")';
+    console.log('start timer');
+  },0);
+  setTimeout(() => {
+    clearInterval(hitEnemy);
+    console.log('stop timer');
+    boss.style.backgroundImage = 'url("images/deathstar.png")';
+  }, 500);
+
   //increase score
   score += 1000;
   //display the score
@@ -276,24 +282,6 @@ function bulletHitInvader(bullet, invader) {
   scoreBoard.innerHTML = 'Score: ' + score;
 }
 
-function gameLoop() {
-  // TODO: Create these functions (or rename the ones Rob has suggested).
-  //checkLoss();
-  // if (levelIsBeaten()) {
-  //   //loadNextLevel();
-  // }
-  checkPlayerCollision();
-  checkLevelWin();
-  //checkBossWin();
-  // if(playerIsDead()) {
-  //   endGame();
-  // }
-}
-
-// // TODO: Put this in a function. Then call it when you click start.
-// // You'll need to keep track of the interval ID so you can stop it later
-gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
-// // TODO: then clearInterval when you're ready to end the game.
 
 //we need this after the boss is defeated
 function checkBossWin() {
@@ -352,9 +340,6 @@ function startBossLevel() {
   gameBoard.style.backgroundImage = 'url("images/starwarsbg.png")';
   gameBoard.style.backgroundSize = 'cover';
 
-  //add lives to the menu
-
-
   //create the boss element (death star)
   boss = document.createElement('div');
 
@@ -403,9 +388,9 @@ function shootLaser() {
       //if a collision has been detected
       //stop the laser
       //game over
-      if(checkBossCollision(laser)) {
-        clearInterval(fireLaser);
-      }
+      // if(checkBossCollision(laser)) {
+      //   clearInterval(fireLaser);
+      // }
       // } else if(laserPosition >= 650){
       //   //if bullet goes out of bounds
       //   //remove the bullet from game screen
@@ -458,6 +443,28 @@ function moveBoss() {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////// MAIN GAME LOOP //////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+function gameLoop() {
+  // TODO: Create these functions (or rename the ones Rob has suggested).
+  //checkLoss();
+  // if (levelIsBeaten()) {
+  //   //loadNextLevel();
+  // }
+  checkPlayerCollision();
+  checkLevelWin();
+  //checkBossWin();
+  // if(playerIsDead()) {
+  //   endGame();
+  // }
+}
+
+// // TODO: Put this in a function. Then call it when you click start.
+// // You'll need to keep track of the interval ID so you can stop it later
+gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
+// // TODO: then clearInterval when you're ready to end the game.
 // gameLoop();
 createPlayer();
 moveInvaderRight();
