@@ -11,7 +11,7 @@ const invadersBoard = document.querySelector('.invadersBoard');
 const scoreBoard = document.querySelector('.score');
 
 //add elements to the game board
-gameBoard.appendChild(scoreBoard);
+// gameBoard.appendChild(scoreBoard);
 gameBoard.appendChild(invadersBoard);
 
 // intervalIDs
@@ -31,7 +31,7 @@ let invaderPositionTop = 60;
 //speed at which the invaders will move
 const invaderSpeed = 1;
 //distance the invaders will drop after touching the sides
-let invaderDrop = 1;
+let invaderDrop = 10;
 let touchedRightSide = false;
 
 //speed at which the bullet will fire
@@ -53,7 +53,7 @@ const Player = {
 let boss;
 
 //create boss health
-let bossHealth = 0;
+let bossHealth = 50;
 let bar = document.querySelector('.bar');
 
 const Boss = {
@@ -261,13 +261,13 @@ function removeBullet(bullet) {
 
 function bulletHitBoss(bullet) {
   console.log('boss hit...');
-  bossHealth++;
+  bossHealth--;
   console.log(bossHealth);
-  bar.style.width = bossHealth + '%';
-  bar.innerHTML = bossHealth * 1 + '%';
+  bar.style.width = bossHealth * 2 + '%';
+  bar.innerHTML = bossHealth * 2 + '%';
 
   //make death star red
-  if(bossHealth === 50) {
+  if(bossHealth === 0) {
     console.log(bossHealth);
     isWin = true;
     gameOver();

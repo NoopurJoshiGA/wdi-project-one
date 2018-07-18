@@ -1,3 +1,7 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 
 body {
   margin: 0;
@@ -6,20 +10,10 @@ body {
 
   .board {
     height: 700px;
-    width: 700px;
+    width: 100%;
+    max-width: 700px;
     background-size: cover;
     background-image: url('../images/deathstarbg.png');
-  }
-
-  .score {
-    color: mintcream;
-    font-family: monospace;
-    font-size: 1rem;
-    border: 2px solid mintcream;
-    width: 100px;
-    line-height: 50px;
-    text-decoration: bold;
-    padding: 5px;
   }
 
   .player {
@@ -120,14 +114,25 @@ body {
 }
 
 .menu {
-  width: 700px;
+  width: 100%;
+  max-width: 700px;
   height: 50px;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
   background-color: #2196f361;
   justify-content: space-around;
+  align-items: center;
 }
+
+ .score {
+    color: mintcream;
+    font-family: sans-serif;
+    font-size: 1rem;
+    border: 2px solid mintcream;
+    width: 150px;
+    text-decoration: bold;
+    padding: 5px;
+  }
 
 .fa-heart {
   font-size: 30px;
@@ -143,9 +148,189 @@ body {
 }
 
 .health-bar{
-  background-color: red;
+  background-color: #e72415;
+  width: 100%;
+  max-width: 200px;
+  height: 20px;
+}
+
+.bar {
+  width: 0;
+  height: 20px;
+  background-color: black;
+  color: white;
+  transition:
+}
+
+img {
+  width: 30px;
+  height: 30px;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+  .board {
+    height: 700px;
+    width: 100%;
+    max-width: 700px;
+    background-size: cover;
+    background-image: url('../images/deathstarbg.png');
+  }
+
+  .player {
+    width: 140px;
+    height: 140px;
+    background-image: url('../images/ship.png');
+    position: absolute;
+    top: 500px;
+    left: 230px;
+  }
+
+  .invader {
+    width: 40px;
+    height: 40px;
+    background-size: contain;
+    /* background-image: url('../images/invaders.gif'); */
+    background-image: url('../images/tiefighter.png');
+    display: inline-block;
+    position: relative;
+    margin: 0 20px 20px 20px;
+  }
+
+  .invadersBoard {
+    width: 600px;
+    max-width: 100%;
+    margin: 0 auto;
+    position: absolute;
+    text-align: center;
+    top: 60px;
+  }
+
+  .bullet {
+    width: 5px;
+    height: 30px;
+    background-color: #FFC107;
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 10px #ff9212, 0 0 20px #ff9212, 0 0 40px #ff9212, 0 0 35px #ff9212, 0 0 55px #ff9212;
+    position: absolute;
+    top: 0px;
+  }
+
+  .laser {
+    width: 10px;
+    position: absolute;
+    background-color: #9fff30;
+    box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 10px #9fff30, 0 0 20px #9fff30, 0 0 40px #9fff30, 0 0 35px #9fff30, 0 0 55px #9fff30;
+  }
+
+  .explosion {
+    background-image: url('../images/explosion.png');
+    width: 100px;
+    height: 100px;
+  }
+
+.hit {
+  visibility: hidden;
+}
+
+.gameOverMessage {
+  color: mintcream;
+  width: 700px;
+  height: 700px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-family: monospace;
+  text-align: center;
+  line-height: 700px;
+  box-sizing: border-box;
+  background-color: #f5fffa40;
+}
+
+.boss {
   width: 200px;
+  height: 200px;
+  /* background-color: blue; */
+  background-image: url('../images/deathstar.png');
+  background-size: contain;
+  position: absolute;
+  transition: left 2s;
+}
+
+.fas {
+  color: white;
+  font-size: 2rem;
+  padding: 5px;
+  position: fixed;
+  top: 5px;
+  left: 5px;
+  opacity: 0.8;
+  float: left;
+}
+
+.fa-volume-up {
+  visibility: hidden;
+}
+
+.fa-volume-off {
+}
+
+.menu {
+  width: 100%;
+  max-width: 700px;
   height: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #2196f361;
+  justify-content: space-around;
+  align-items: center;
+}
+
+ .score {
+    color: mintcream;
+    font-family: sans-serif;
+    font-size: 1rem;
+    border: 2px solid mintcream;
+    width: 150px;
+    text-decoration: bold;
+    padding: 5px;
+  }
+
+.fa-heart {
+  font-size: 30px;
+  color: red;
+}
+
+.bossHit {
+  width: 200px;
+  height: 200px;
+  /* background-color: blue; */
+  background-size: contain;
+  background-image: url('./images/deathstarhit.png');
+}
+
+.health-bar{
+  /* background-color: #e72415; */
+  background-color: black;
+  width: 100%;
+  max-width: 200px;
+  height: 20px;
+}
+
+.bar {
+  width: 0;
+  background: linear-gradient(to right, red, orange, yellow, green);
+  height: 20px;
+  background-color: black;
+  color: white;
+  transition: right 1s;
+
 }
 
 img {
