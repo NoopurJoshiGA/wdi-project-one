@@ -108,6 +108,7 @@ body {
   top: 5px;
   left: 5px;
   opacity: 0.8;
+  float: left;
 }
 
 .fa-volume-up {
@@ -116,4 +117,19 @@ body {
 
 .fa-volume-off {
 
+}
+
+.menu {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  background-color: #2196f361;
+  justify-content: space-around;
+}
+
+.fa-heart {
+  float: right;
+  font-size: 30px;
+  color: red;
 }
