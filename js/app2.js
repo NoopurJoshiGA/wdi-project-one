@@ -104,6 +104,8 @@ function startGame() {
   moveInvaderRight();
   level++;
   console.log('level: ', level);
+
+  movePlayer();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -184,21 +186,23 @@ function moveInvaderLeft() {
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// PLAYER MOVEMENT ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-//make player move
-document.onkeydown = function(e) {
-  //move player left
-  if(Player.x > -30 && e.keyCode === 37) {
-    Player.x -= Player.speed;
-    player.style.left = Player.x + 'px';
 
-  } else if (Player.x < 650 && e.keyCode === 39) {
-    Player.x += Player.speed;
-    player.style.left = Player.x + 'px';
+function movePlayer() {
+  document.onkeydown = function(e) {
+    //move player left
+    if(Player.x > -30 && e.keyCode === 37) {
+      Player.x -= Player.speed;
+      player.style.left = Player.x + 'px';
 
-  } else if (e.keyCode === 32) {
-    shootBullet();
-  }
-};
+    } else if (Player.x < 650 && e.keyCode === 39) {
+      Player.x += Player.speed;
+      player.style.left = Player.x + 'px';
+
+    } else if (e.keyCode === 32) {
+      shootBullet();
+    }
+  };
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// SHOOT BULLET ///////////////////////////////////
@@ -216,13 +220,13 @@ function shootBullet() {
   //start firing the bullet from the same height as the player
   let bulletPosition = Player.y;
   bullet.intervalId = setInterval(function() {
-    if(bulletPosition > 0 ) {
+    if(bulletPosition > 50 ) {
       //make sure bullet doesn't go to infinity and beyond
       bulletPosition -= bulletSpeed;
       bullet.style.top = bulletPosition + 'px';
       // check if the bullet has hit anything
       checkBulletCollision(bullet);
-    } else if(bulletPosition <= 0){
+    } else if(bulletPosition <= 50){
       removeBullet(bullet);
     }
   }, 50);
@@ -335,9 +339,8 @@ function checkLevel(){
 function decreasePlayerHealth() {
   playerHealth--;
   console.log(playerHealth);
-
-  playerBar.style.width = playerHealth / 3 + '%';
-  playerBar.innerHTML = playerHealth / 3 + '%';
+  playerBar.style.width = playerHealth + '%';
+  playerBar.innerHTML = playerHealth + '%';
 
   if(playerHealth === 0) {
     console.log('player is dead...');
