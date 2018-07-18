@@ -190,11 +190,11 @@ function moveInvaderLeft() {
 function movePlayer() {
   document.onkeydown = function(e) {
     //move player left
-    if(Player.x > -30 && e.keyCode === 37) {
+    if(Player.x > -20 && e.keyCode === 37) {
       Player.x -= Player.speed;
       player.style.left = Player.x + 'px';
 
-    } else if (Player.x < 650 && e.keyCode === 39) {
+    } else if (Player.x < 560 && e.keyCode === 39) {
       Player.x += Player.speed;
       player.style.left = Player.x + 'px';
 
