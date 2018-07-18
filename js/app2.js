@@ -25,8 +25,8 @@ let playerBar = document.querySelector('.player-bar');
 let playerHealth = 100;
 let bossBar = document.querySelector('.boss-bar');
 let bossHealth = 50;
-let score;
-let level;
+let score = 0;
+let level = 0;
 
 //game condition
 let isWin = false;
@@ -97,13 +97,14 @@ function startGameScreen() {
 }
 
 function startGame() {
-  gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
+  const gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
   startScreen.style.display = 'none';
   gameBoard.style.display = 'block';
   createPlayer();
   moveInvaderRight();
+  level++;
+  console.log('level: ', level);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
@@ -309,9 +310,12 @@ function bulletHitInvader(bullet, invader) {
 }
 
 function gameOver() {
-  console.log('game over...');
-  gameBoard.removeChild(invadersBoard);
-  // gameBoard.removeChild(boss);
+  if(checkLevel() === 1) {
+    console.log('game over...', level);
+    gameBoard.removeChild(invadersBoard);
+  } else {
+    gameBoard.removeChild(boss);
+  }
   gameBoard.removeChild(player);
   const gameOverMessage = document.createElement('div');
   gameBoard.appendChild(gameOverMessage);
@@ -323,34 +327,25 @@ function gameOver() {
   }
 }
 
+function checkLevel(){
+  console.log('checking level...', level);
+  return level;
+}
+
 function decreasePlayerHealth() {
-  //starts with 500
   playerHealth--;
   console.log(playerHealth);
 
   playerBar.style.width = playerHealth / 3 + '%';
   playerBar.innerHTML = playerHealth / 3 + '%';
 
-  //make death star red
   if(playerHealth === 0) {
-    console.log('player is ded...');
+    console.log('player is dead...');
     isWin = false;
+
     gameOver();
-    // } else {
-    //   const hitEnemy = setTimeout(function() {
-    //     boss.style.backgroundImage = 'url("images/deathstarhit.png")';
-    //   },0);
-    //   setTimeout(() => {
-    //     clearInterval(hitEnemy);
-    //     boss.style.backgroundImage = 'url("images/deathstar.png")';
-    //   }, 500);
-    //
-    //   score += 1000;
-    //   scoreBoard.innerHTML = 'Score: ' + score;
-    // }
   }
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////// CHECK IF PLAYER CAN MOVE TO NEXT LEVEL //////////////////////
@@ -379,6 +374,8 @@ function checkLevelWin() {
 /////////////////////////////// START BOSS LEVEL ///////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 function startBossLevel() {
+  level++;
+  console.log('level: ', level);
   //create the boss on game board
   createBoss();
   //death star shoots laser beam every 5 seconds
@@ -418,7 +415,7 @@ function shootLaser() {
   const laser = document.createElement('div');
   laser.classList.add('laser');
   boss.appendChild(laser);
-  //position bullet so it's in the center of the player
+  //position laser so it's in the center of the boss
   laser.style.left = '97.5px';
   laser.style.top = '75px';
 
@@ -426,21 +423,10 @@ function shootLaser() {
   let laserPosition = 250;
 
   const fireLaser = setInterval(function() {
-    //make sure bullet doesn't go beyond the player
+    //make sure laser doesn't go beyond the screen
     if(laserPosition < 560) {
       laserPosition += 30;
       laser.style.height = laserPosition + 'px';
-      //if a collision has been detected
-      //stop the laser
-      //game over
-      // if(checkBossCollision(laser)) {
-      //   clearInterval(fireLaser);
-      // }
-      // } else if(laserPosition >= 650){
-      //   //if bullet goes out of bounds
-      //   //remove the bullet from game screen
-      //   clearInterval(fireBossBullet);
-      //   boss.removeChild(laser);
     } else {
       const holdLaser = setTimeout(function() {
         clearInterval(fireLaser);

@@ -1,45 +1,51 @@
+//TODO:
+// (1) fix position of start BUTTON
+// (2) add instructions to game
+// (3) fix the fact that you can still shoot bullets before starting the game which kills off invaders
+// (4) sort out the player and boss health bars, style them as well, make them look funky
+// (5) sort out game over situation (maybe have two different scenarios, one for the level and for the boss screen)
+// (6) add sound effects and music to enhance UX
+// (7) add game restart button (clear all intervals, maybe push all intervals into an array and then clear all?)
+// (8) improve game over gameOverMessage
+// (9) add levels if you can get time or make enemies shoot (or both to really get extra cookies)
+// (10) refactor refactor refactor
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// DECLARE VARIABLES //////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-//get board variable from DOM
+//get all variables from DOM
+const startScreen = document.querySelector('.start-screen');
 const gameBoard = document.querySelector('.board');
-//get container where the invaders will be placed
-const invadersBoard = document.querySelector('.invadersBoard');
-//get score board
+const invadersBoard = document.querySelector('.invaders-board');
 const scoreBoard = document.querySelector('.score');
 
-//add elements to the game board
-// gameBoard.appendChild(scoreBoard);
-//gameBoard.appendChild(invadersBoard);
+//menu items
+let playerBar = document.querySelector('.player-bar');
+let playerHealth = 100;
+let bossBar = document.querySelector('.boss-bar');
+let bossHealth = 50;
+let score;
+let level;
 
-// intervalIDs
-//let gameLoopIntervalId;
-
-//score
-let score = 0;
-
+//game condition
 let isWin = false;
-
-//invader variables
-let invader;
 //create empty array of invaders
+let invader;
 let invaders = [];
+
+//could refactor this?
 let invaderPositionLeft = 0;
 let invaderPositionTop = 60;
 //speed at which the invaders will move
 const invaderSpeed = 2;
 //distance the invaders will drop after touching the sides
-let invaderDrop = 20;
+let invaderDrop = 10;
 let touchedRightSide = false;
-
 //speed at which the bullet will fire
 const bulletSpeed = 20;
-
 //player
 let player = document.querySelector('.player');
-
 //create player object
 const Player = {
   x: 260,
@@ -49,38 +55,16 @@ const Player = {
   speed: 20
 };
 
-//create boss object
 let boss;
 
-//create boss health
-let bossHealth = 50;
-let bossBar = document.querySelector('.boss-bar');
-
-
-//create player health
-let playerHealth = 100;
-let playerBar = document.querySelector('.player-bar');
-
-const Boss = {
-  x: 250,
-  y: 50,
-  w: 150,
-  h: 150
-};
-
-//music
-const music = document.getElementById('music');
+const music = document.querySelector('#main-theme');
 const musicOn = document.querySelector('.fa-volume-up');
 const musicOff = document.querySelector('.fa-volume-off');
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// GAME MUSIC /////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
-function setupAudio() {
-  musicOff.addEventListener('click', playMusic);
-  musicOn.addEventListener('click', pauseMusic);
-}
 
 function playMusic() {
   music.play();
@@ -98,12 +82,27 @@ function pauseMusic() {
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// START SCREEN ///////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-function startScreen() {
-  // let mainTheme = document.querySelector('#main-theme');
-  // mainTheme.play();
+function startGameScreen() {
+  const startGameButton = document.createElement('button');
+  startGameButton.classList.add('startBtn');
+  startGameButton.innerHTML = 'Start Game';
+  startScreen.appendChild(startGameButton);
+  startGameButton.addEventListener('click', startGame);
+
+  //music
+
+  musicOff.addEventListener('click', playMusic);
+  musicOn.addEventListener('click', pauseMusic);
 
 }
 
+function startGame() {
+  gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
+  startScreen.style.display = 'none';
+  gameBoard.style.display = 'block';
+  createPlayer();
+  moveInvaderRight();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
@@ -308,10 +307,10 @@ function bulletHitInvader(bullet, invader) {
   scoreBoard.innerHTML = 'Score: ' + score;
 }
 
-function gameOver() {
+function gameOver(level) {
   console.log('game over...');
   gameBoard.removeChild(invadersBoard);
-  // gameBoard.removeChild(boss);
+  gameBoard.removeChild(boss);
   gameBoard.removeChild(player);
   const gameOverMessage = document.createElement('div');
   gameBoard.appendChild(gameOverMessage);
@@ -361,11 +360,11 @@ function checkLevelWin() {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
 
-    //remove any bullets left on the screen
-    const selectAllBullets = document.querySelectorAll('.bullet');
-    selectAllBullets.forEach(bullet => {
-      gameBoard.removeChild(bullet);
-    });
+    // //remove any bullets left on the screen
+    // const selectAllBullets = document.querySelectorAll('.bullet');
+    // selectAllBullets.forEach(bullet => {
+    //   gameBoard.removeChild(bullet);
+    // });
     //clear any intervals
     clearInterval(moveInvaderLeft);
     clearInterval(moveInvaderRight);
@@ -406,8 +405,8 @@ function createBoss() {
   boss.classList.add('boss');
 
   //position boss in the middle of the screen to begin with
-  boss.style.left = Boss.x + 'px';
-  boss.style.top = Boss.y + 'px';
+  boss.style.left = 250 + 'px';
+  boss.style.top = 50 + 'px';
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -423,7 +422,7 @@ function shootLaser() {
   laser.style.top = '75px';
 
   //start firing the bullet from the same height as the player
-  let laserPosition = Boss.y;
+  let laserPosition = 250;
 
   const fireLaser = setInterval(function() {
     //make sure bullet doesn't go beyond the player
@@ -490,28 +489,16 @@ function moveBoss() {
 ////////////////////////////////////////////////////////////////////////////////
 
 function gameLoop() {
-  // TODO: Create these functions (or rename the ones Rob has suggested).
-  //checkLoss();
-  // if (levelIsBeaten()) {
-  //   //loadNextLevel();
-  // }
   checkPlayerCollision();
   checkLevelWin();
-  //checkBossWin();
-  // if(playerIsDead()) {
-
-  // }
 }
 
 // // TODO: Put this in a function. Then call it when you click start.
 // // You'll need to keep track of the interval ID so you can stop it later
-gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
+
 // // TODO: then clearInterval when you're ready to end the game.
-// gameLoop();
-// createPlayer();
-// moveInvaderRight();
-// setupAudio();
 
 
 
-startScreen();
+
+startGameScreen();
