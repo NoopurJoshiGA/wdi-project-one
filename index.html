@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html lang="" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="./css/style.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
-    <title>Space Invaders</title>
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/startscreen.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+  <title>Space Invaders</title>
+</head>
+<body>
 
-    <div class='board'>
-      <div class='menu'>
-        <i class="fas fa-volume-up"></i>
-        <i class="fas fa-volume-off"></i>
-        <div class='score'>Score: 0</div>
-        <div class='death-star-icon'></div>
-        <div class='health-bar'>
-          <div class='bar'></div>
-        </div>
+  <div class='start-screen'>
+    <h1>STAR WARS</h2>
+      <p>A short time ago in Aldgate East...</p>
+      <audio id="main-theme">
+        <source src="./audio/maintheme.mp3" type="audio/mp3">
+        </audio>
       </div>
+
+      <div class='board'>
+        <div class='menu'>
+          <i class="fas fa-volume-up"></i>
+          <i class="fas fa-volume-off"></i>
+          <div class='score'>Score: 0</div>
+          <div class='death-star-icon'></div>
+          <div class='health-bar'>
+            <div class='boss-bar'></div>
+            <div class='player-bar'></div>
+          </div>
+        </div>
         <div class='invadersBoard'></div>
         <div class='player'></div>
-    </div>
+      </div>
 
 
-    <script src="./js/app2.js" type="text/javascript"></script>
-  </body>
-</html>
-
-
-
-<!-- <i class="fas fa-heart"></i>
-<i class="fas fa-heart"></i>
-<i class="fas fa-heart"></i> -->
+      <script src="./js/app2.js" type="text/javascript"></script>
+    </body>
+    </html>

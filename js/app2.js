@@ -12,7 +12,7 @@ const scoreBoard = document.querySelector('.score');
 
 //add elements to the game board
 // gameBoard.appendChild(scoreBoard);
-gameBoard.appendChild(invadersBoard);
+//gameBoard.appendChild(invadersBoard);
 
 // intervalIDs
 //let gameLoopIntervalId;
@@ -29,9 +29,9 @@ let invaders = [];
 let invaderPositionLeft = 0;
 let invaderPositionTop = 60;
 //speed at which the invaders will move
-const invaderSpeed = 1;
+const invaderSpeed = 2;
 //distance the invaders will drop after touching the sides
-let invaderDrop = 10;
+let invaderDrop = 20;
 let touchedRightSide = false;
 
 //speed at which the bullet will fire
@@ -54,7 +54,12 @@ let boss;
 
 //create boss health
 let bossHealth = 50;
-let bar = document.querySelector('.bar');
+let bossBar = document.querySelector('.boss-bar');
+
+
+//create player health
+let playerHealth = 100;
+let playerBar = document.querySelector('.player-bar');
 
 const Boss = {
   x: 250,
@@ -89,6 +94,16 @@ function pauseMusic() {
   musicOff.style.visibility = 'visible';
   musicOn.style.visibility = 'hidden';
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// START SCREEN ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+function startScreen() {
+  // let mainTheme = document.querySelector('#main-theme');
+  // mainTheme.play();
+
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
@@ -228,7 +243,7 @@ function checkPlayerCollision() {
   for (let i = 0; i < objectsToCheck.length; i++) {
     const currentObject = objectsToCheck[i];
     if (objectsCollide(player, currentObject)) {
-      gameOver();
+      decreasePlayerHealth();
     }
   }
 }
@@ -239,7 +254,6 @@ function checkBulletCollision(bullet) {
   for (let i = 0; i < objectsToCheck.length; i++) {
     const currentObject = objectsToCheck[i];
     if (objectsCollide(bullet, currentObject)) {
-      // console.log('Bullet has hit!', currentObject.classList);
       removeBullet(bullet);
       if (currentObject.classList.contains('boss')) {
         bulletHitBoss(bullet);
@@ -260,11 +274,10 @@ function removeBullet(bullet) {
 ////////////////////////////////////////////////////////////////////////////////
 
 function bulletHitBoss(bullet) {
-  console.log('boss hit...');
   bossHealth--;
   console.log(bossHealth);
-  bar.style.width = bossHealth * 2 + '%';
-  bar.innerHTML = bossHealth * 2 + '%';
+  bossBar.style.width = bossHealth * 2 + '%';
+  bossBar.innerHTML = bossHealth * 2 + '%';
 
   //make death star red
   if(bossHealth === 0) {
@@ -280,9 +293,7 @@ function bulletHitBoss(bullet) {
       boss.style.backgroundImage = 'url("images/deathstar.png")';
     }, 500);
 
-  //   //increase score
     score += 1000;
-    //display the score
     scoreBoard.innerHTML = 'Score: ' + score;
   }
 }
@@ -299,8 +310,8 @@ function bulletHitInvader(bullet, invader) {
 
 function gameOver() {
   console.log('game over...');
-  // gameBoard.removeChild(invadersBoard);
-  gameBoard.removeChild(boss);
+  gameBoard.removeChild(invadersBoard);
+  // gameBoard.removeChild(boss);
   gameBoard.removeChild(player);
   const gameOverMessage = document.createElement('div');
   gameBoard.appendChild(gameOverMessage);
@@ -310,7 +321,34 @@ function gameOver() {
   } else {
     gameOverMessage.innerHTML = 'You\'ve won';
   }
+}
 
+function decreasePlayerHealth() {
+  //starts with 500
+  playerHealth--;
+  console.log(playerHealth);
+
+  playerBar.style.width = playerHealth / 3 + '%';
+  playerBar.innerHTML = playerHealth / 3 + '%';
+
+  //make death star red
+  if(playerHealth === 0) {
+    console.log('player is ded...');
+    isWin = false;
+    gameOver();
+    // } else {
+    //   const hitEnemy = setTimeout(function() {
+    //     boss.style.backgroundImage = 'url("images/deathstarhit.png")';
+    //   },0);
+    //   setTimeout(() => {
+    //     clearInterval(hitEnemy);
+    //     boss.style.backgroundImage = 'url("images/deathstar.png")';
+    //   }, 500);
+    //
+    //   score += 1000;
+    //   scoreBoard.innerHTML = 'Score: ' + score;
+    // }
+  }
 }
 
 
@@ -470,6 +508,10 @@ function gameLoop() {
 gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
 // // TODO: then clearInterval when you're ready to end the game.
 // gameLoop();
-createPlayer();
-moveInvaderRight();
-setupAudio();
+// createPlayer();
+// moveInvaderRight();
+// setupAudio();
+
+
+
+startScreen();
