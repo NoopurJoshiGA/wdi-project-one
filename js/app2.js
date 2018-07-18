@@ -13,6 +13,9 @@ const scoreBoard = document.querySelector('.score');
 gameBoard.appendChild(scoreBoard);
 gameBoard.appendChild(invadersBoard);
 
+// intervalIDs
+//let gameLoopIntervalId;
+
 //score
 let score = 0;
 
@@ -53,6 +56,10 @@ const Boss = {
   h: 150
 };
 
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// GAME MUSIC /////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //create background music
 const music = document.getElementById('music');
 const musicOn = document.querySelector('.fa-volume-up');
@@ -72,8 +79,6 @@ function pauseMusic() {
   musicOff.style.visibility = 'visible';
   musicOn.style.visibility = 'hidden';
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
@@ -150,6 +155,9 @@ function moveInvaderLeft() {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// PLAYER MOVEMENT ////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 //make player move
 document.onkeydown = function(e) {
   //move player left
@@ -166,6 +174,9 @@ document.onkeydown = function(e) {
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// SHOOT BULLET ///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 function shootBullet() {
   //create bullet element
   const bullet = document.createElement('div');
@@ -188,6 +199,9 @@ function shootBullet() {
       if(checkCollision(bullet)) {
         clearInterval(fireBullet);
       }
+      if(checkEnemyCollision(bullet)) {
+        clearInterval(bullet);
+      }
     } else if(bulletPosition <= 0){
       //if bullet goes out of bounds
       clearInterval(fireBullet);
@@ -197,6 +211,10 @@ function shootBullet() {
   }, 50);
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// CHECK COLLISION ////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 function checkCollision(bullet) {
   for(let i=0; i<invaders.length; i++) {
     //get corners of the bullets and invaders
@@ -228,13 +246,40 @@ function checkCollision(bullet) {
   return false;
 }
 
-function gameLoop() {
-  setTimeout(gameLoop, 1000);
-  checkLoss();
-  checkLevelWin();
-  //checkBossWin();
+//needs refactoring, check for collision between player bullet and death star
+function checkEnemyCollision(bullet) {
+  const bossBottom = boss.getBoundingClientRect().bottom;
+  const bossLeft = boss.getBoundingClientRect().left;
+  const bossRight = bossLeft + 200;
+  const bulletLeft = bullet.getBoundingClientRect().left;
+  const bulletRight = bulletLeft + 10;
+  const bulletTop = bullet.getBoundingClientRect().top;
+
+  if((bulletTop < bossBottom) && (bulletRight > bossLeft) && (bulletLeft < bossRight)){
+    console.log('death star hit');
+    return true;
+  } else {
+    return false;
+  }
 }
 
+function gameLoop() {
+  // TODO: Create these functions (or rename the ones Rob has suggested).
+  //checkLoss();
+  // if (levelIsBeaten()) {
+  //   //loadNextLevel();
+  // }
+  checkLevelWin();
+  //checkBossWin();
+  // if(playerIsDead()) {
+  //   endGame();
+  // }
+}
+
+// // TODO: Put this in a function. Then call it when you click start.
+// // You'll need to keep track of the interval ID so you can stop it later
+gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
+// // TODO: then clearInterval when you're ready to end the game.
 
 //we need this after the boss is defeated
 // function checkBossWin() {
@@ -246,25 +291,29 @@ function gameLoop() {
 //   // gameOverMessage.innerHTML = 'Congratulations! You\'ve saved the galaxy';
 // }
 
-function checkLoss(){
-  for(let i=0; i<invaders.length; i++) {
-    if(invaders[i].getBoundingClientRect().top > 600) {
-      console.log(invaders[i].getBoundingClientRect().top);
-      console.log('game over');
-      gameBoard.removeChild(invadersBoard);
-      gameBoard.removeChild(player);
-      gameBoard.removeChild(scoreBoard);
-      const gameOverMessage = document.createElement('div');
-      gameBoard.appendChild(gameOverMessage);
-      gameOverMessage.classList.add('gameOverMessage');
-      gameOverMessage.innerHTML = 'You\'ve been defeated';
-    }
-  }
-}
+// function checkLoss(){
+//   for(let i=0; i<invaders.length; i++) {
+//     if(invaders[i].getBoundingClientRect().top > 600) {
+//       console.log(invaders[i].getBoundingClientRect().top);
+//       console.log('game over');
+//       gameBoard.removeChild(invadersBoard);
+//       gameBoard.removeChild(player);
+//       gameBoard.removeChild(scoreBoard);
+//       const gameOverMessage = document.createElement('div');
+//       gameBoard.appendChild(gameOverMessage);
+//       gameOverMessage.classList.add('gameOverMessage');
+//       gameOverMessage.innerHTML = 'You\'ve been defeated';
+//     }
+//   }
+// }
 
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////// CHECK IF PLAYER CAN MOVE TO NEXT LEVEL //////////////////////
+////////////////////////////////////////////////////////////////////////////////
 function checkLevelWin() {
   //if all 28 invaders have been hit, then you go to the boss level
-  if(document.querySelectorAll('.hit').length === 27) {
+  if(document.querySelectorAll('.hit').length === 2) {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
 
@@ -282,7 +331,9 @@ function checkLevelWin() {
   }
 }
 
-//ENTER THE DEATH STARRRRRRRR :@:@:@:@
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// START BOSS LEVEL ///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 function enterBoss() {
   //change the background to make game look cool
   gameBoard.style.backgroundImage = 'url("images/starwarsbg.png")';
@@ -290,8 +341,10 @@ function enterBoss() {
 
   //create the boss element (death star)
   boss = document.createElement('div');
+
   //add it to the game board
   gameBoard.appendChild(boss);
+
   //add a class
   boss.classList.add('boss');
 
@@ -310,7 +363,9 @@ function enterBoss() {
   }, 2000);
 }
 
-//this runs every 2 seconds
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// SHOOT LASER ////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 function shootLaser() {
   console.log('generating beam...');
   const laser = document.createElement('div');
@@ -357,20 +412,25 @@ function checkBossCollision(laser) {
   const playerTop = player.getBoundingClientRect().top;
   const playerLeft = player.getBoundingClientRect().left;
   const playerRight = playerLeft + 140;
+  const playerBottom = player.getBoundingClientRect().bottom;
 
   const laserBottom = laser.getBoundingClientRect().height;
   const laserLeft = laser.getBoundingClientRect().left;
   const laserRight = laserLeft + 10;
+  const laserTop = laser.getBoundingClientRect().top;
 
   // collision detection conditionals between laser beam and player
   if((laserBottom >= playerTop) && (laserRight > playerLeft) && (laserLeft < playerRight)) {
+    // if((playerRight > laserLeft) && (playerLeft < laserRight) && (playerTop <= laserBottom) && (playerBottom < laserTop)) {
     alert('player hit');
-    //return true;
   }
-  //  return false;
+  //return true;
 }
+//  return false;
 
-// move boss
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// MOVE BOSS //////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 function moveBoss() {
   //create an array of directions the boss can move in
   const directions = ['left', 'right'];
@@ -387,8 +447,6 @@ function moveBoss() {
     case 'left': {
       if((bossLeft-distance) > 0 ){
         console.log(distance);
-        console.log('boss left + distance', bossLeft + distance);
-
         boss.style.left = (bossLeft-distance) + 'px';
       } else {
         boss.style.left = '100px';
@@ -398,7 +456,6 @@ function moveBoss() {
     case 'right': {
       console.log('distance',distance);
       if((bossRight+distance) < 500) {
-        console.log('boss right + distance', bossRight + distance);
         boss.style.left = bossLeft + distance + 'px';
       } else {
         boss.style.left = '450px';
@@ -407,8 +464,6 @@ function moveBoss() {
     }
   }
 }
-
-
 
 gameLoop();
 createPlayer();
