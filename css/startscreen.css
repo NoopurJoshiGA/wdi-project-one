@@ -111,8 +111,9 @@ h1 {
   /* animation: button forwards;
   animation-delay: 7s; */
   /* TODO: doesn't work with margin-top for some reason... */
-  /* margin-top: 250px; */
   background-color: transparent;
+  position: relative;
+  top: 600px;
   font-size:  1rem;
 }
 
