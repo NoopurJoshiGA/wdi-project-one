@@ -4,22 +4,22 @@
 }
 
 body {
-  background-color: black;
+  background-image: url('../images/starfieldbg.jpg');
+  background-cover: cover;
   color: white;
   display: flex;
   justify-content: space-around;
-  padding-top: 40px;
-  margin: 0 auto;
 }
 
   .board {
     height: 700px;
     width: 100%;
     max-width: 700px;
-    margin: 0 auto;
     background-size: cover;
     background-image: url('../images/deathstarbg.png');
     display: none;
+    margin-top: 50px;
+    position: relative;
   }
 
   .player {
@@ -27,15 +27,12 @@ body {
     height: 140px;
     background-image: url('../images/ship.png');
     position: absolute;
-    top: 500px;
-    left: 230px;
   }
 
   .invader {
     width: 40px;
     height: 40px;
     background-size: contain;
-    /* background-image: url('../images/invaders.gif'); */
     background-image: url('../images/tiefighter.png');
     display: inline-block;
     position: relative;
@@ -45,8 +42,7 @@ body {
   .invaders-board {
     width: 600px;
     max-width: 100%;
-    margin: 0 auto;
-    position: absolute;
+    position: relative;
     text-align: center;
     top: 60px;
   }
@@ -57,7 +53,6 @@ body {
     background-color: #FFC107;
     box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 10px #ff9212, 0 0 20px #ff9212, 0 0 40px #ff9212, 0 0 35px #ff9212, 0 0 55px #ff9212;
     position: absolute;
-    top: 0px;
   }
 
     .invaderBullet {
@@ -66,7 +61,6 @@ body {
       background-color: #FFC107;
       box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 10px #ff9212, 0 0 20px #ff9212, 0 0 40px #ff9212, 0 0 35px #ff9212, 0 0 55px #ff9212;
       position: absolute;
-      top: 0px;
     }
 
   .laser {
@@ -89,13 +83,11 @@ body {
 .gameOverMessage {
   color: mintcream;
   width: 700px;
-  height: 700px;
-  position: fixed;
-  top: 0;
-  left: 0;
+  height: 600px;
+  position: relative;
   font-family: monospace;
   text-align: center;
-  line-height: 700px;
+  line-height: 600px;
   box-sizing: border-box;
   background-color: #f5fffa40;
 }
