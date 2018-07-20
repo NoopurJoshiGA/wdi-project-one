@@ -1,9 +1,3 @@
-//TODO:
-// (4) add icons next to health bars
-// (6) add sound effects and music to enhance UX
-// (7) add game restart button (clear all intervals, maybe push all intervals into an array and then clear all?)
-// (8) improve gameOverMessage
-// (10) refactor refactor refactor
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// DECLARE VARIABLES //////////////////////////////
@@ -17,7 +11,7 @@ const scoreBoard = document.querySelector('.score');
 
 //menu items
 const playerBar = document.querySelector('.player-bar');
-let playerHealth = 100;
+let playerHealth = 50;
 const bossBar = document.querySelector('.boss-bar');
 let bossHealth = 100;
 let score = 0;
@@ -29,7 +23,6 @@ let isWin = false;
 let invader;
 const invaders = [];
 
-//could refactor this?
 let invaderPositionLeft = 0;
 let invaderPositionTop = 60;
 //speed at which the invaders will move
@@ -88,23 +81,19 @@ function startGameScreen() {
   startGameButton.addEventListener('click', startGame);
 
   //music
-
   musicOff.addEventListener('click', playMusic);
   musicOn.addEventListener('click', pauseMusic);
-
 }
 
 function startGame() {
-  const gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
+  setInterval(gameLoop, 1000 / 30); // 30 frames per second
   startScreen.style.display = 'none';
   gameBoard.style.display = 'block';
   createPlayer();
   moveInvaderRight();
-  level++;
-  console.log('level: ', level);
-
   movePlayer();
   randomInvaderBullet();
+  level++;
 }
 
 
@@ -334,7 +323,6 @@ function randomInvaderBullet() {
 function bulletHitBoss() {
   bossHealth--;
   bossBar.style.width = bossHealth * 1 + '%';
-  // bossBar.innerHTML = bossHealth * 2 + '%'
 
   //make death star red
   if(bossHealth === 0) {
@@ -401,8 +389,7 @@ function checkLevel(){
 
 function decreasePlayerHealth() {
   playerHealth--;
-  playerBar.style.width = playerHealth * 1 + '%';
-  // playerBar.innerHTML = playerHealth + '%';
+  playerBar.style.width = playerHealth * 2 + '%';
   const hitPlayerInterval = setTimeout(function() {
     player.style.backgroundImage = 'url("images/xwinghit.png")';
   },0);
@@ -411,10 +398,9 @@ function decreasePlayerHealth() {
     player.style.backgroundImage = 'url("images/xwing.png")';
   }, 500);
 
-  if(playerHealth === 0) {
+  if(playerHealth <= 0) {
     console.log('player is dead...');
     isWin = false;
-
     gameOver();
   }
 }
@@ -424,7 +410,7 @@ function decreasePlayerHealth() {
 ////////////////////////////////////////////////////////////////////////////////
 function checkLevelWin() {
   //if all 28 invaders have been hit, then you go to the boss level
-  if(document.querySelectorAll('.hit').length === 28) {
+  if(document.querySelectorAll('.hit').length === 4) {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
     //clear any intervals

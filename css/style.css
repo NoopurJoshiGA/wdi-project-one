@@ -176,3 +176,9 @@ img {
   width: 30px;
   height: 30px;
 }
+
+.playerExplosion {
+  background-image: contain;
+  width: 100px;
+  height: 140px;
+}
