@@ -16,6 +16,8 @@ const bossBar = document.querySelector('.boss-bar');
 let bossHealth = 100;
 let score = 0;
 let level = 0;
+let shootLaserInterval;
+let moveBossInterval;
 
 //game condition
 let isWin = false;
@@ -101,13 +103,14 @@ function startGame() {
 
 
 function generateInvaderBullet() {
+
   //create invader bullet
   const invaderBullet = document.createElement('div');
   //give bullet a class
   invaderBullet.classList.add('invaderBullet');
   //add bullet to game screen
   gameBoard.appendChild(invaderBullet);
-  //position bullet so it's in the center of the player
+
   const randomIndex = Math.floor(Math.random() * invaders.length);
   const randomInvader = invaders[randomIndex];
 
@@ -122,8 +125,7 @@ function generateInvaderBullet() {
       //make sure bullet doesn't go to infinity and beyond
       invaderBulletPosition += bulletSpeed;
       invaderBullet.style.top = invaderBulletPosition + 'px';
-      // check if the bullet has hit anything
-      // checkBulletCollision(bullet);
+
     } else {
       removeInvaderBullet(invaderBullet);
     }
@@ -336,10 +338,14 @@ function bulletHitBoss() {
   } else {
     const hitEnemy = setTimeout(function() {
       boss.style.backgroundImage = 'url("images/deathstarhit.png")';
+      boss.classList.add('animated');
+      boss.classList.add('shake');
     },0);
     setTimeout(() => {
       clearInterval(hitEnemy);
       boss.style.backgroundImage = 'url("images/deathstar.png")';
+      boss.classList.remove('animated');
+      boss.classList.remove('shake');
     }, 500);
 
     score += 1000;
@@ -371,6 +377,8 @@ function gameOver() {
     gameBoard.removeChild(invadersBoard);
     clearGameBoard();
   } else {
+    clearInterval(shootLaserInterval);
+    clearInterval(moveBossInterval);
     gameBoard.removeChild(boss);
     laser.pause();
     gameIntervals.forEach((interval) => clearInterval(interval));
@@ -426,12 +434,13 @@ function decreasePlayerHealth() {
 ////////////////////////////////////////////////////////////////////////////////
 function checkLevelWin() {
   //if all 28 invaders have been hit, then you go to the boss level
-  if(document.querySelectorAll('.hit').length === 28) {
+  if(document.querySelectorAll('.hit').length === 2) {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
     //clear any intervals
     clearInterval(moveInvaderLeft);
     clearInterval(moveInvaderRight);
+
     clearGameBoard();
     //proceed to the next level
     startBossLevel();
@@ -449,16 +458,15 @@ function startBossLevel() {
   //create the boss on game board
   createBoss();
   //death star shoots laser beam every 5 seconds
-  const shootLaserInterval = setInterval(function(){
+  shootLaserInterval = setInterval(function(){
     shootLaser();
     laser.play();
   }, 5000);
 
   //randomly move boss left and right
-  const moveBossInterval = setInterval(function(){
+  moveBossInterval = setInterval(function(){
     moveBoss();
   }, 2000);
-  // gameIntervals.push(moveBossInterval);
 }
 
 function createBoss() {
