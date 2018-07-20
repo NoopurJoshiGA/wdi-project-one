@@ -353,24 +353,26 @@ function bulletHitInvader(bullet, invader) {
   scoreBoard.innerHTML = 'Score: ' + score;
 }
 
+function clearGameBoard() {
+  const objectsToClear = document.querySelectorAll('.invaderBullet,.bullet,.invader');
+  for (let i = 0; i < objectsToClear.length; i++) {
+    objectsToClear[i].remove();
+  }
+}
+
 function gameOver() {
   if(checkLevel() === 1) {
     console.log('game over...', level);
     // if(gameBoard.classList.contains = '')
     gameIntervals.forEach((interval) => clearInterval(interval));
     gameBoard.removeChild(invadersBoard);
-
-    const remainingInvaderBullets = document.querySelector('.invaderBullet');
-    if(remainingInvaderBullets.length > 0){
-      console.log('huh');
-      remainingInvaderBullets[0].parentNode.removeChild(remainingInvaderBullets[0]);
-    }
-
+    clearGameBoard();
   } else {
     gameBoard.removeChild(boss);
     laser.pause();
     gameIntervals.forEach((interval) => clearInterval(interval));
   }
+
   gameBoard.removeChild(player);
   const gameOverMessage = document.createElement('div');
   gameBoard.appendChild(gameOverMessage);
@@ -380,7 +382,16 @@ function gameOver() {
   } else {
     gameOverMessage.innerHTML = 'You\'ve destroyed the Death Star! The force is strong with you.';
   }
+
+  const gameOverButton = document.createElement('div');
+  gameOverButton.classList.add('gameOverButton');
+  gameOverMessage.appendChild(gameOverButton);
+  gameOverButton.innerHTML = 'Restart Game';
+  gameOverButton.addEventListener('click', function() {
+    window.location.reload();
+  });
 }
+
 
 function checkLevel(){
   console.log('checking level...', level);
@@ -416,7 +427,7 @@ function checkLevelWin() {
     //clear any intervals
     clearInterval(moveInvaderLeft);
     clearInterval(moveInvaderRight);
-
+    clearGameBoard();
     //proceed to the next level
     startBossLevel();
     console.log(gameIntervals);
