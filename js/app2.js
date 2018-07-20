@@ -48,7 +48,7 @@ let boss;
 const music = document.querySelector('#main-theme');
 const musicOn = document.querySelector('.fa-volume-up');
 const musicOff = document.querySelector('.fa-volume-off');
-const pew = document.querySelector('#pew');
+// const pew = document.querySelector('#pew');
 const laser = document.querySelector('#laser');
 
 const gameIntervals = [];
@@ -76,6 +76,9 @@ function pauseMusic() {
 function startGameScreen() {
   const startGameButton = document.createElement('button');
   startGameButton.classList.add('startBtn');
+  startGameButton.classList.add('pulse');
+  startGameButton.classList.add('animated');
+  startGameButton.classList.add('infinite');
   startGameButton.innerHTML = 'Start Game';
   startScreen.appendChild(startGameButton);
   startGameButton.addEventListener('click', startGame);
@@ -222,6 +225,7 @@ function movePlayer() {
     } else if (e.keyCode === 32) {
       shootBullet();
       //sound effect
+      const pew = new Audio('./audio/pew.mp3');
       pew.play();
     }
   };
@@ -354,7 +358,7 @@ function bulletHitInvader(bullet, invader) {
 }
 
 function clearGameBoard() {
-  const objectsToClear = document.querySelectorAll('.invaderBullet,.bullet,.invader');
+  const objectsToClear = document.querySelectorAll('.invaderBullet,.invader');
   for (let i = 0; i < objectsToClear.length; i++) {
     objectsToClear[i].remove();
   }
@@ -363,7 +367,6 @@ function clearGameBoard() {
 function gameOver() {
   if(checkLevel() === 1) {
     console.log('game over...', level);
-    // if(gameBoard.classList.contains = '')
     gameIntervals.forEach((interval) => clearInterval(interval));
     gameBoard.removeChild(invadersBoard);
     clearGameBoard();
@@ -372,7 +375,6 @@ function gameOver() {
     laser.pause();
     gameIntervals.forEach((interval) => clearInterval(interval));
   }
-
   gameBoard.removeChild(player);
   const gameOverMessage = document.createElement('div');
   gameBoard.appendChild(gameOverMessage);
@@ -421,7 +423,7 @@ function decreasePlayerHealth() {
 ////////////////////////////////////////////////////////////////////////////////
 function checkLevelWin() {
   //if all 28 invaders have been hit, then you go to the boss level
-  if(document.querySelectorAll('.hit').length === 4) {
+  if(document.querySelectorAll('.hit').length === 28) {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
     //clear any intervals

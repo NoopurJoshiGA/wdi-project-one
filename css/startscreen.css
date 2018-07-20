@@ -107,6 +107,7 @@ h1 {
   color: yellow;
   opacity: 1;
   box-sizing: border-box;
+  font-family: monospace;
   cursor: pointer;
   /* animation: button forwards;
   animation-delay: 7s; */
