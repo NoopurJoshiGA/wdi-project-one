@@ -389,6 +389,9 @@ function gameOver() {
   gameOverButton.classList.add('gameOverButton');
   gameOverMessage.appendChild(gameOverButton);
   gameOverButton.innerHTML = 'Restart Game';
+  gameOverButton.classList.add('animated');
+  gameOverButton.classList.add('pulse');
+  gameOverButton.classList.add('infinite');
   gameOverButton.addEventListener('click', function() {
     window.location.reload();
   });
