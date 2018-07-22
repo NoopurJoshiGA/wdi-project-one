@@ -50,7 +50,6 @@ let boss;
 const music = document.querySelector('#main-theme');
 const musicOn = document.querySelector('.fa-volume-up');
 const musicOff = document.querySelector('.fa-volume-off');
-// const pew = document.querySelector('#pew');
 const laser = document.querySelector('#laser');
 
 const gameIntervals = [];
@@ -100,7 +99,6 @@ function startGame() {
   randomInvaderBullet();
   level++;
 }
-
 
 function generateInvaderBullet() {
 
@@ -309,6 +307,10 @@ function removeInvaderBullet(invaderBullet) {
   clearInterval(invaderBullet.intervalId);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// INVADER BULLETS ////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
 function getRandomTime() {
   const randomTime = Math.floor(Math.random() * 2) + 1;
   console.log(randomTime);
@@ -405,7 +407,6 @@ function gameOver() {
   });
 }
 
-
 function checkLevel(){
   console.log('checking level...', level);
   return level;
@@ -434,7 +435,7 @@ function decreasePlayerHealth() {
 ////////////////////////////////////////////////////////////////////////////////
 function checkLevelWin() {
   //if all 28 invaders have been hit, then you go to the boss level
-  if(document.querySelectorAll('.hit').length === 2) {
+  if(document.querySelectorAll('.hit').length === 28) {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
     //clear any intervals
@@ -560,13 +561,5 @@ function gameLoop() {
   checkPlayerCollision();
   checkLevelWin();
 }
-
-// // TODO: Put this in a function. Then call it when you click start.
-// // You'll need to keep track of the interval ID so you can stop it later
-
-// // TODO: then clearInterval when you're ready to end the game.
-
-
-
 
 startGameScreen();
