@@ -29,7 +29,7 @@ GitHub
 ___
 The original game idea was to develop a grid of enemies which gradually move across the screen and move closer to the player when the boundaries of the game box are hit. I created a simple wireframe using PhotoShop containing a grid of enemies and the player.
 
-![alt text](../images/readme/wireframe.png)
+![alt text](images/readme/wireframe.png)
 
 Firstly, I added player movement using Keyboard events, and spacebar to fire bullets. I then used set intervals to move the player's bullet upwards and also to periodically move enemies across the screen.
 
