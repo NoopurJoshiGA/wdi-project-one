@@ -102,7 +102,11 @@ function startGame() {
 
 function generateInvaderBullet() {
 
-  //create invader bullet
+  // Create invader bullet
+  // Check if invader has the class 'hit'
+  // TODO: fix the bug!!!
+  // If it does then don't fire bullet
+
   const invaderBullet = document.createElement('div');
   //give bullet a class
   invaderBullet.classList.add('invaderBullet');
@@ -112,6 +116,8 @@ function generateInvaderBullet() {
   const randomIndex = Math.floor(Math.random() * invaders.length);
   const randomInvader = invaders[randomIndex];
 
+  if(!randomInvader.classList.contains('hit')) {
+  console.log('randomInvader is', randomInvader);
   //position bullet in the middle of the invader
   invaderBullet.style.left = randomInvader.getBoundingClientRect().left - gameBoard.getBoundingClientRect().left + 20 + 'px';
   invaderBullet.style.top = randomInvader.getBoundingClientRect().top + 40 + 'px';
@@ -130,6 +136,7 @@ function generateInvaderBullet() {
   }, 50);
 
   gameIntervals.push(invaderBullet.intervalId);
+}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

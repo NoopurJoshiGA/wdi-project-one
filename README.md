@@ -1,6 +1,6 @@
-# Space Invaders
-___
-![alt text](../images/readme/spaceinvaderslevel1.png)
+# Project 1: Space Invaders (Star Wars Theme)
+_
+![Gameplay](images/readme/spaceinvaderslevel1.png  | width=200))
 
 Play the game (desktop only): https://noopsyjoshi.github.io/wdi-project-one/
 
