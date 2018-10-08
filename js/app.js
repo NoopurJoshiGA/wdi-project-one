@@ -1,15 +1,7 @@
-//TODO:
-// (2) add instructions to game
-// (4) add icons next to health bars
-// (6) add sound effects and music to enhance UX
-// (7) add game restart button (clear all intervals, maybe push all intervals into an array and then clear all?)
-// (8) improve game over gameOverMessage
-// (10) refactor refactor refactor
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// DECLARE VARIABLES //////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
 
 //get all variables from DOM
 const startScreen = document.querySelector('.start-screen');
@@ -19,11 +11,13 @@ const scoreBoard = document.querySelector('.score');
 
 //menu items
 const playerBar = document.querySelector('.player-bar');
-let playerHealth = 100;
+let playerHealth = 50;
 const bossBar = document.querySelector('.boss-bar');
-let bossHealth = 50;
+let bossHealth = 100;
 let score = 0;
 let level = 0;
+let shootLaserInterval;
+let moveBossInterval;
 
 //game condition
 let isWin = false;
@@ -31,24 +25,23 @@ let isWin = false;
 let invader;
 const invaders = [];
 
-//could refactor this?
 let invaderPositionLeft = 0;
 let invaderPositionTop = 60;
 //speed at which the invaders will move
-const invaderSpeed = 0.1;
+const invaderSpeed = 1;
 //distance the invaders will drop after touching the sides
 const invaderDrop = 10;
 let touchedRightSide = false;
 //speed at which the bullet will fire
-const bulletSpeed = 20;
+const bulletSpeed = 15;
 //player
 const player = document.querySelector('.player');
 //create player object
 const Player = {
-  x: 260,
-  y: 280,
-  w: 50,
-  h: 50,
+  x: 270,
+  y: 0,
+  w: 135,
+  h: 120,
   speed: 20
 };
 
@@ -57,11 +50,9 @@ let boss;
 const music = document.querySelector('#main-theme');
 const musicOn = document.querySelector('.fa-volume-up');
 const musicOff = document.querySelector('.fa-volume-off');
+const laser = document.querySelector('#laser');
 
-
-//intervals
-let invaderBulletInterval;
-
+const gameIntervals = [];
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// GAME MUSIC /////////////////////////////////////
@@ -86,65 +77,67 @@ function pauseMusic() {
 function startGameScreen() {
   const startGameButton = document.createElement('button');
   startGameButton.classList.add('startBtn');
+  startGameButton.classList.add('pulse');
+  startGameButton.classList.add('animated');
+  startGameButton.classList.add('infinite');
   startGameButton.innerHTML = 'Start Game';
   startScreen.appendChild(startGameButton);
   startGameButton.addEventListener('click', startGame);
 
   //music
-
   musicOff.addEventListener('click', playMusic);
   musicOn.addEventListener('click', pauseMusic);
-
 }
 
 function startGame() {
-  const gameLoopIntervalId = setInterval(gameLoop, 1000 / 30); // 30 frames per second
+  setInterval(gameLoop, 1000 / 30); // 30 frames per second
   startScreen.style.display = 'none';
   gameBoard.style.display = 'block';
   createPlayer();
   moveInvaderRight();
-  level++;
-  console.log('level: ', level);
-
   movePlayer();
   randomInvaderBullet();
-
-
-
-  let test = gameBoard.getBoundingClientRect().bottom;
-  console.log('test',test);
+  level++;
 }
 
 function generateInvaderBullet() {
-  //create invader bullet
+
+  // Create invader bullet
+  // Check if invader has the class 'hit'
+  // TODO: fix the bug!!!
+  // If it does then don't fire bullet
+
   const invaderBullet = document.createElement('div');
   //give bullet a class
   invaderBullet.classList.add('invaderBullet');
   //add bullet to game screen
   gameBoard.appendChild(invaderBullet);
-  //position bullet so it's in the center of the player
+
   const randomIndex = Math.floor(Math.random() * invaders.length);
   const randomInvader = invaders[randomIndex];
 
+  if(!randomInvader.classList.contains('hit')) {
+  console.log('randomInvader is', randomInvader);
   //position bullet in the middle of the invader
-  invaderBullet.style.left = randomInvader.getBoundingClientRect().left + 20 + 'px';
+  invaderBullet.style.left = randomInvader.getBoundingClientRect().left - gameBoard.getBoundingClientRect().left + 20 + 'px';
   invaderBullet.style.top = randomInvader.getBoundingClientRect().top + 40 + 'px';
-  console.log(invaderBullet.style.left);
-  console.log(invaderBullet.style.top);
-  let invaderBulletPosition = randomInvader.getBoundingClientRect().bottom;
-  console.log('invaderbuletpositi ', invaderBulletPosition);
-  invaderBulletInterval = setInterval(function() {
-    if(invaderBulletPosition < 750 ) {
+
+  let invaderBulletPosition = randomInvader.getBoundingClientRect().top;
+
+  invaderBullet.intervalId = setInterval(function() {
+    if(invaderBulletPosition < 650 ) {
       //make sure bullet doesn't go to infinity and beyond
       invaderBulletPosition += bulletSpeed;
       invaderBullet.style.top = invaderBulletPosition + 'px';
 
-    } else if(invaderBulletPosition >= 70){
+    } else {
       removeInvaderBullet(invaderBullet);
     }
   }, 50);
-}
 
+  gameIntervals.push(invaderBullet.intervalId);
+}
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
@@ -173,7 +166,7 @@ function createPlayer() {
   gameBoard.appendChild(player);
   //position player in the middle
   player.style.left = Player.x + 'px';
-  player.style.top = Player.y + 'px';
+  player.style.bottom = Player.y + 'px';
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -228,7 +221,7 @@ function moveInvaderLeft() {
 function movePlayer() {
   document.onkeydown = function(e) {
     //move player left
-    if(Player.x > -20 && e.keyCode === 37) {
+    if(Player.x > 10 && e.keyCode === 37) {
       Player.x -= Player.speed;
       player.style.left = Player.x + 'px';
 
@@ -238,6 +231,9 @@ function movePlayer() {
 
     } else if (e.keyCode === 32) {
       shootBullet();
+      //sound effect
+      const pew = new Audio('./audio/pew.mp3');
+      pew.play();
     }
   };
 }
@@ -253,18 +249,19 @@ function shootBullet() {
   //add bullet to game screen
   gameBoard.appendChild(bullet);
   //position bullet so it's in the center of the player
-  bullet.style.left = Player.x + Player.w + 'px';
-  bullet.style.top = Player.y - Player.h + 'px';
+  bullet.style.left = Player.x + 65 + 'px';
+  bullet.style.bottom = Player.h + 'px';
   //start firing the bullet from the same height as the player
-  let bulletPosition = Player.y;
+  let bulletPosition = Player.h;
+
   bullet.intervalId = setInterval(function() {
-    if(bulletPosition < 500 ) {
+    if(bulletPosition < 600 ) {
       //make sure bullet doesn't go to infinity and beyond
-      bulletPosition -= bulletSpeed;
-      bullet.style.top = bulletPosition + 'px';
+      bulletPosition += bulletSpeed;
+      bullet.style.bottom = bulletPosition + 'px';
       // check if the bullet has hit anything
       checkBulletCollision(bullet);
-    } else if(bulletPosition <= 50){
+    } else {
       removeBullet(bullet);
     }
   }, 50);
@@ -313,9 +310,13 @@ function removeBullet(bullet) {
 }
 
 function removeInvaderBullet(invaderBullet) {
-  // gameBoard.removeChild(invaderBullet);
-  clearInterval(invaderBulletInterval);
+  gameBoard.removeChild(invaderBullet);
+  clearInterval(invaderBullet.intervalId);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////// INVADER BULLETS ////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 function getRandomTime() {
   const randomTime = Math.floor(Math.random() * 2) + 1;
@@ -324,20 +325,19 @@ function getRandomTime() {
 }
 
 function randomInvaderBullet() {
-  setInterval(function() {
+  const randomBulletInterval = setInterval(function() {
     generateInvaderBullet();
   }, getRandomTime());
+  gameIntervals.push(randomBulletInterval);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CHECK COLLISION ////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
-function bulletHitBoss(bullet) {
+function bulletHitBoss() {
   bossHealth--;
-  console.log(bossHealth);
-  bossBar.style.width = bossHealth * 2 + '%';
-  bossBar.innerHTML = bossHealth * 2 + '%';
+  bossBar.style.width = bossHealth * 1 + '%';
 
   //make death star red
   if(bossHealth === 0) {
@@ -347,10 +347,14 @@ function bulletHitBoss(bullet) {
   } else {
     const hitEnemy = setTimeout(function() {
       boss.style.backgroundImage = 'url("images/deathstarhit.png")';
+      boss.classList.add('animated');
+      boss.classList.add('shake');
     },0);
     setTimeout(() => {
       clearInterval(hitEnemy);
       boss.style.backgroundImage = 'url("images/deathstar.png")';
+      boss.classList.remove('animated');
+      boss.classList.remove('shake');
     }, 500);
 
     score += 1000;
@@ -368,22 +372,46 @@ function bulletHitInvader(bullet, invader) {
   scoreBoard.innerHTML = 'Score: ' + score;
 }
 
+function clearGameBoard() {
+  const objectsToClear = document.querySelectorAll('.invaderBullet,.invader');
+  for (let i = 0; i < objectsToClear.length; i++) {
+    objectsToClear[i].remove();
+  }
+}
+
 function gameOver() {
   if(checkLevel() === 1) {
     console.log('game over...', level);
+    gameIntervals.forEach((interval) => clearInterval(interval));
     gameBoard.removeChild(invadersBoard);
+    clearGameBoard();
   } else {
+    clearInterval(shootLaserInterval);
+    clearInterval(moveBossInterval);
     gameBoard.removeChild(boss);
+    laser.pause();
+    gameIntervals.forEach((interval) => clearInterval(interval));
   }
   gameBoard.removeChild(player);
   const gameOverMessage = document.createElement('div');
   gameBoard.appendChild(gameOverMessage);
   gameOverMessage.classList.add('gameOverMessage');
   if(!isWin){
-    gameOverMessage.innerHTML = 'You\'ve been defeated.';
+    gameOverMessage.innerHTML = 'The rebel force has been destroyed. Much to learn you still have, young Padawan';
   } else {
-    gameOverMessage.innerHTML = 'You\'ve won';
+    gameOverMessage.innerHTML = 'You\'ve destroyed the Death Star! The force is strong with you.';
   }
+
+  const gameOverButton = document.createElement('div');
+  gameOverButton.classList.add('gameOverButton');
+  gameOverMessage.appendChild(gameOverButton);
+  gameOverButton.innerHTML = 'Restart Game';
+  gameOverButton.classList.add('animated');
+  gameOverButton.classList.add('pulse');
+  gameOverButton.classList.add('infinite');
+  gameOverButton.addEventListener('click', function() {
+    window.location.reload();
+  });
 }
 
 function checkLevel(){
@@ -393,13 +421,18 @@ function checkLevel(){
 
 function decreasePlayerHealth() {
   playerHealth--;
-  playerBar.style.width = playerHealth + '%';
-  playerBar.innerHTML = playerHealth + '%';
+  playerBar.style.width = playerHealth * 2 + '%';
+  const hitPlayerInterval = setTimeout(function() {
+    player.style.backgroundImage = 'url("images/xwinghit.png")';
+  },0);
+  setTimeout(() => {
+    clearInterval(hitPlayerInterval);
+    player.style.backgroundImage = 'url("images/xwing.png")';
+  }, 500);
 
-  if(playerHealth === 0) {
+  if(playerHealth <= 0) {
     console.log('player is dead...');
     isWin = false;
-
     gameOver();
   }
 }
@@ -409,22 +442,18 @@ function decreasePlayerHealth() {
 ////////////////////////////////////////////////////////////////////////////////
 function checkLevelWin() {
   //if all 28 invaders have been hit, then you go to the boss level
-  if(document.querySelectorAll('.hit').length === 2) {
+  if(document.querySelectorAll('.hit').length === 28) {
     //remove all the elements from the game board
     gameBoard.removeChild(invadersBoard);
-
-    //remove any bullets left on the screen
-    const selectAllBullets = document.querySelectorAll('.bullet');
-    selectAllBullets.forEach(bullet => {
-      gameBoard.removeChild(bullet);
-    });
     //clear any intervals
     clearInterval(moveInvaderLeft);
     clearInterval(moveInvaderRight);
-    clearInterval(invaderBulletInterval);
 
+    clearGameBoard();
     //proceed to the next level
     startBossLevel();
+    console.log(gameIntervals);
+    gameIntervals.forEach((interval) => clearInterval(interval));
   }
 }
 
@@ -437,12 +466,13 @@ function startBossLevel() {
   //create the boss on game board
   createBoss();
   //death star shoots laser beam every 5 seconds
-  setInterval(function(){
+  shootLaserInterval = setInterval(function(){
     shootLaser();
+    laser.play();
   }, 5000);
 
   //randomly move boss left and right
-  setInterval(function(){
+  moveBossInterval = setInterval(function(){
     moveBoss();
   }, 2000);
 }
@@ -480,19 +510,21 @@ function shootLaser() {
   //start firing the bullet from the same height as the player
   let laserPosition = 250;
 
-  const fireLaser = setInterval(function() {
+  const fireLaserInterval = setInterval(function() {
     //make sure laser doesn't go beyond the screen
     if(laserPosition < 560) {
       laserPosition += 30;
       laser.style.height = laserPosition + 'px';
     } else {
-      const holdLaser = setTimeout(function() {
-        clearInterval(fireLaser);
+      const holdLaserInterval = setTimeout(function() {
+        clearInterval(fireLaserInterval);
         laserPosition = 0;
         laser.style.height = '0px';
       }, 1000);
+      gameIntervals.push(holdLaserInterval);
     }
   }, 50);
+  gameIntervals.push(fireLaserInterval);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -501,13 +533,12 @@ function shootLaser() {
 function moveBoss() {
   //create an array of directions the boss can move in
   const directions = ['left', 'right'];
-  let direction = Math.floor((Math.random() * 2));
+  const direction = Math.floor((Math.random() * 2));
 
   //generate random distance (death star can move up between 100px and 200px left or right)
-  let distance = Math.floor((Math.random() * 150) + 100);
-
-  let bossLeft = boss.getBoundingClientRect().left;
-  let bossRight = boss.getBoundingClientRect().left + 200;
+  const distance = Math.floor((Math.random() * 150) + 100);
+  const bossLeft = boss.style.left;
+  const bossRight = boss.style.left + 200;
 
   switch(directions[direction]){
     case 'left': {
@@ -537,13 +568,5 @@ function gameLoop() {
   checkPlayerCollision();
   checkLevelWin();
 }
-
-// // TODO: Put this in a function. Then call it when you click start.
-// // You'll need to keep track of the interval ID so you can stop it later
-
-// // TODO: then clearInterval when you're ready to end the game.
-
-
-
 
 startGameScreen();

@@ -36,7 +36,16 @@ I formulated a function which determines whether or not an enemy has been hit by
 I reached MVP quite early on in the project, which opened doors to add more features. I decided to allow the enemy to fire back at the player. I was able to add a boss level, the 'Death Star'. To make the game more exciting, I added a laser beam emerging from the Death Star, which would almost destroy the players health if hit.
 
 ### Wins
-- As most of my game's winning logic relies heavily on collision, I had to formulate a way to detect collision between all occurrances, not only between the player's bullet and the enemy (on level 1). A huge win was to refactor the collision detection to pass multiple objects and run the calculation.
+- As most of my game's winning logic relies heavily on collision, I had to formulate a way to detect collision between all occurrences, not only between the player's bullet and the enemy (on level 1). A huge win was to refactor the collision detection to pass multiple objects and run the calculation. This is shown in the code snippet below -
+
+```javascript
+function objectsCollide(obj1, obj2) {
+  const box1 = obj1.getBoundingClientRect();
+  const box2 = obj2.getBoundingClientRect();
+  return (box1.right > box2.left) && (box1.left < box2.right)
+  && (box1.top < box2.bottom) && (box1.bottom > box2.top);
+}
+```
 
 ### Challenges
 - I ran into an issue where I wasn't able to remove the exact enemy that was hit with the player's bullet. If I removed the enemy from the grid, the remaining enemies would fill the space. To resolve this, I used attribute ID's to hide the enemy that was hit.
