@@ -63,3 +63,6 @@ After achieving the core objectives, I decided to introduce a few more features 
 - Add Star Wars 'crawling' text as a game intro using CSS Animations
 - Add multiple levels where the speed of the enemies moving across the screen increases for each level, making the game more difficult for the player - this will make the boss level feel more rewarding
 - Take a look at adding responsiveness make the game playable on a tablet
+- Fix bug - when the enemy is defeated, it still fires a bullet
+- Fix bug - when the enemy reaches the bottom of the screen, the game still continues. This should cause the game to end
+- Fix bug - when the player proceeds to the next level, the bullets from level 1 don't disappear from the game screen. The already fired bullets don't disappear from the screen when game over

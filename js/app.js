@@ -102,11 +102,6 @@ function startGame() {
 
 function generateInvaderBullet() {
 
-  // Create invader bullet
-  // Check if invader has the class 'hit'
-  // TODO: fix the bug!!!
-  // If it does then don't fire bullet
-
   const invaderBullet = document.createElement('div');
   //give bullet a class
   invaderBullet.classList.add('invaderBullet');
@@ -115,29 +110,33 @@ function generateInvaderBullet() {
 
   const randomIndex = Math.floor(Math.random() * invaders.length);
   const randomInvader = invaders[randomIndex];
+  // don't fire bullet if invader has been hit (only fire bullets for invaders displayed on the screen)
+  if(randomInvader.classList.contains('hit')) {
+    invaderBullet.style.left = 0 + 'px';
+    invaderBullet.style.top = 0 + 'px';
+    invaderBullet.style.visibility = 'hidden';
+  } else {
+    //position bullet in the middle of the invader
+    invaderBullet.style.left = randomInvader.getBoundingClientRect().left - gameBoard.getBoundingClientRect().left + 20 + 'px';
+    invaderBullet.style.top = randomInvader.getBoundingClientRect().top + 40 + 'px';
 
-  if(!randomInvader.classList.contains('hit')) {
-  console.log('randomInvader is', randomInvader);
-  //position bullet in the middle of the invader
-  invaderBullet.style.left = randomInvader.getBoundingClientRect().left - gameBoard.getBoundingClientRect().left + 20 + 'px';
-  invaderBullet.style.top = randomInvader.getBoundingClientRect().top + 40 + 'px';
+    let invaderBulletPosition = randomInvader.getBoundingClientRect().top;
 
-  let invaderBulletPosition = randomInvader.getBoundingClientRect().top;
-
-  invaderBullet.intervalId = setInterval(function() {
-    if(invaderBulletPosition < 650 ) {
+    invaderBullet.intervalId = setInterval(function() {
+      if(invaderBulletPosition < 650 ) {
       //make sure bullet doesn't go to infinity and beyond
-      invaderBulletPosition += bulletSpeed;
-      invaderBullet.style.top = invaderBulletPosition + 'px';
+        invaderBulletPosition += bulletSpeed;
+        invaderBullet.style.top = invaderBulletPosition + 'px';
 
-    } else {
-      removeInvaderBullet(invaderBullet);
-    }
-  }, 50);
+      } else {
+        removeInvaderBullet(invaderBullet);
+      }
+    }, 50);
 
-  gameIntervals.push(invaderBullet.intervalId);
+    gameIntervals.push(invaderBullet.intervalId);
+  }
 }
-}
+// }
 
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////// CREATE INVADERS ////////////////////////////////
